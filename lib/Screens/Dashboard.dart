@@ -73,6 +73,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   var date = new DateFormat("yyyy-MM-dd").format(now);
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   String fcmToken = "";
+
   @override
   void initState() {
     super.initState();
@@ -113,7 +114,6 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
     _controller.forward();
 
-
     _firebaseMessaging.getToken().then((String token) {
       print("Original Token:$token");
       var tokendata = token.split(':');
@@ -131,13 +131,11 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         Future res = Services.SendTokanToServer(fcmToken);
-        res.then((data) async {
-        }, onError: (e) {
+        res.then((data) async {}, onError: (e) {
           print("Error : on Login Call");
         });
       }
-    } on SocketException catch (_) {
-    }
+    } on SocketException catch (_) {}
   }
 
   getSound() async {
@@ -519,6 +517,12 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     }
   }
 
+  String setdata() {
+    getLocalData();
+    //densih ubhal
+    return memberName;
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -586,7 +590,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '$memberName',
+                      "${setdata()}",
                       style: TextStyle(fontSize: 14),
                       maxLines: 1,
                     ),
