@@ -644,6 +644,37 @@ class Services {
     }
   }
 
+
+  //updated Guest Info
+  static Future<SaveDataClass> sendGuestDetails(body) async {
+    print(body.toString());
+    String url = API_URL + 'UpdateGuest';
+    print("UpdateProfilePersonal url : " + url);
+    try {
+      final response = await dio.post(url, data: body);
+      if (response.statusCode == 200) {
+        SaveDataClass saveData =
+        new SaveDataClass(Message: 'No Data', IsSuccess: false,IsRecord: false, Data: null);
+
+        print("UpdateProfilePersonal Response: " + response.data.toString());
+        var memberDataClass = response.data;
+
+        saveData.Message = memberDataClass["Message"];
+        saveData.IsSuccess = memberDataClass["IsSuccess"];
+        saveData.IsRecord = memberDataClass["IsRecord"];
+        saveData.Data = memberDataClass["Data"].toString();
+
+        return saveData;
+      } else {
+        print("UpdateProfilePersonal Url");
+        throw Exception(response.data.toString());
+      }
+    } catch (e) {
+      print("Error Kap ${e.toString()}");
+      throw Exception(e.toString());
+    }
+  }
+
   static Future<SaveDataClass> sendBusinessMemberDetails(body) async {
     print(body.toString());
     String url = API_URL + 'UpdateProfileBusiness';

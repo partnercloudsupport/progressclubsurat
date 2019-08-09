@@ -28,8 +28,9 @@ class _GuestProfileState extends State<GuestProfile> {
   TextEditingController edtName = new TextEditingController();
   TextEditingController edtEmail = new TextEditingController();
   TextEditingController edtCmpName = new TextEditingController();
-  int memberId=0;
-  String memberImg="";
+  int memberId = 0;
+  String memberImg = "";
+
   //profile editing
 
   File _imageOffer;
@@ -130,14 +131,68 @@ class _GuestProfileState extends State<GuestProfile> {
   setData(List list) async {
     setState(() {
       //personal Info
-      memberImg=list[0]["Image"];
-      memberId=list[0]["Id"];
+      memberImg = list[0]["Image"];
+      memberId = list[0]["Id"];
       edtName.text = list[0]["Name"];
       edtEmail.text = list[0]["Email"];
       //Business Info
       edtCmpName.text = list[0]["CompanyName"];
       isLoading = false;
     });
+  }
+
+  //send Personal Info to server
+  sendPersonalInfo() async {
+    if (edtName.text != "" && edtCmpName.text != "" && edtEmail.text != "") {
+      try {
+        //check Internet Connection
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            isPersonalLoading = true;
+          });
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String memberId = prefs.getString(Session.MemberId);
+          var now = new DateTime.now();
+          var data = {
+            'Id': memberId,
+            'Name': edtName.text,
+            'Company': edtCmpName.text,
+            'Email': edtEmail.text,
+          };
+
+          Services.sendGuestDetails(data).then((data) async {
+            setState(() {
+              isPersonalLoading = false;
+            });
+            if (data.Data != "0" && data != "") {
+              //signUpDone("Assignment Task Update Successfully.");
+              await prefs.setString(Session.Name, edtName.text);
+              await prefs.setString(Session.CompanyName, edtCmpName.text);
+              showHHMsg("Data Updated Successfully");
+            } else {
+              setState(() {
+                isPersonalLoading = false;
+              });
+            }
+          }, onError: (e) {
+            setState(() {
+              isPersonalLoading = false;
+            });
+            showMsg("Try Again.");
+          });
+        } else {
+          setState(() {
+            isPersonalLoading = false;
+          });
+          showMsg("No Internet Connection.");
+        }
+      } on SocketException catch (_) {
+        showMsg("No Internet Connection.");
+      }
+    } else {
+      showMsg("Please Enter Details.");
+    }
   }
 
   @override
@@ -197,7 +252,7 @@ class _GuestProfileState extends State<GuestProfile> {
                                           backgroundColor: Colors.grey[100],
                                           child: ClipOval(
                                             child: memberImg == "" &&
-                                                memberImg == null
+                                                    memberImg == null
                                                 ? Image.asset(
                                                     'images/icon_user.png',
                                                     height: 120,
@@ -228,12 +283,12 @@ class _GuestProfileState extends State<GuestProfile> {
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: (){
+                                    onTap: () {
                                       _profileImagePopup(context);
                                     },
                                     child: Container(
-                                        margin:
-                                            EdgeInsets.only(left: 100, top: 100),
+                                        margin: EdgeInsets.only(
+                                            left: 100, top: 100),
                                         child: Image.asset(
                                           'images/plus.png',
                                           width: 25,
@@ -291,7 +346,7 @@ class _GuestProfileState extends State<GuestProfile> {
                                                   setState(() {
                                                     if (isEditable) {
                                                       isEditable = !isEditable;
-                                                      //sendPersonalInfo();
+                                                      sendPersonalInfo();
                                                     } else {
                                                       isEditable = true;
                                                     }
