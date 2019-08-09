@@ -65,7 +65,12 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   //loading var
   bool isLoading = false;
 
-  String memberName = "", memberCmpName = "", memberPhoto = "", memberId = "",memberType = "",chapterId="";
+  String memberName = "",
+      memberCmpName = "",
+      memberPhoto = "",
+      memberId = "",
+      memberType = "",
+      chapterId = "";
   int soundId;
   int _currentIndex = 0;
   Soundpool pool = Soundpool(streamType: StreamType.notification);
@@ -78,6 +83,18 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     //_selectedDay = DateTime.now();
+
+    _events = {};
+    _selectedEvents = _events[_selectedDay] ?? [];
+    _visibleEvents = _events;
+    _visibleHolidays = _holidays;
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+
+    _controller.forward();
 
     getLocalData();
 
@@ -134,10 +151,10 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         ? new DateTime(now.year, now.month + 1, 0)
         : new DateTime(now.year + 1, 1, 0);
 
-    String sdate = "${lastDayDateTime.day}-${lastDayDateTime.month}-${lastDayDateTime.year}";
-    String edate = "01-${lastDayDateTime.month}-${lastDayDateTime.year}";
-    getDashboardData(chapterId,sdate,edate);
-
+    String sdate = "${lastDayDateTime.year}-${lastDayDateTime.month}-01";
+    String edate =
+        "${lastDayDateTime.year}-${lastDayDateTime.month}-${lastDayDateTime.day}";
+    getDashboardData(chapterId, sdate, edate);
   }
 
   final List<Widget> _children = [];
@@ -501,17 +518,18 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     //densih ubhal
     return memberName;
   }
-  saveAndNavigator() async{
+
+  saveAndNavigator() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(Session.memId,memberId);
-    if(memberType=="guest"){
+    await prefs.setString(Session.memId, memberId);
+    if (memberType == "guest") {
       Navigator.pushNamed(context, '/GuestProfile');
-    }else{
+    } else {
       Navigator.pushNamed(context, '/MemberProfile');
     }
   }
 
-  getDashboardData(String chapterId,String sdate,String edate) async {
+  getDashboardData(String chapterId, String sdate, String edate) async {
     try {
       //check Internet Connection
       final result = await InternetAddress.lookup('google.com');
@@ -519,7 +537,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         setState(() {
           isLoading = true;
         });
-        Future res = Services.GetDashboard(chapterId,sdate, edate);
+        Future res = Services.GetDashboard(chapterId, sdate, edate);
         res.then((data) async {
           if (data != null && data.length > 0) {
             setState(() {
@@ -527,16 +545,19 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               //list = data;
             });
 
-            for(int i=0;i<data.length;i++){
-              
+            _events = {};
+            for (int i = 0; i < data.length; i++) {
+              _events.addAll({
+                DateTime.parse(data[i]["Date"].toString()): data[i]["EventList"]
+              });
             }
 
-            _events = {
+            /*_events = {
               DateTime.parse('2019-07-01'): ['Event A0'],
               DateTime.parse('2019-07-04'): ['Event A0', 'Event B0', 'Event C0'],
               DateTime.parse('2019-07-06'): ['Event A0', 'Event B0', 'Event C0'],
               DateTime.parse('2019-07-10'): ['Event A0'],
-            };
+            };*/
 
             _selectedEvents = _events[_selectedDay] ?? [];
             _visibleEvents = _events;
@@ -546,13 +567,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               vsync: this,
               duration: const Duration(milliseconds: 100),
             );
-
             _controller.forward();
-
-
-
-
-
           } else {
             setState(() {
               isLoading = false;
@@ -911,6 +926,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     setState(() {
       print(first);
       print(last);
+
+      getDashboardData(chapterId, first.toString().substring(0,10), last.toString().substring(0,10));
+
       _visibleEvents = Map.fromEntries(
         _events.entries.where(
           (entry) =>
