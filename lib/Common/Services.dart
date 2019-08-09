@@ -675,15 +675,15 @@ class Services {
 
   static Future<SaveDataClass> sendMoreInfoMemberDetails(body) async {
     print(body.toString());
-    String url = API_URL + 'UpdateProfileBusiness';
-    print("UpdateProfilePersonal url : " + url);
+    String url = API_URL + 'UpdateProfileOther';
+    print("UpdateProfileOther url : " + url);
     try {
       final response = await dio.post(url, data: body);
       if (response.statusCode == 200) {
         SaveDataClass saveData =
         new SaveDataClass(Message: 'No Data', IsSuccess: false,IsRecord: false, Data: null);
 
-        print("UpdateProfilePersonal Response: " + response.data.toString());
+        print("UpdateProfileOther Response: " + response.data.toString());
         var memberDataClass = response.data;
 
         saveData.Message = memberDataClass["Message"];
@@ -693,7 +693,7 @@ class Services {
 
         return saveData;
       } else {
-        print("UpdateProfilePersonal Url");
+        print("UpdateProfileOther Url");
         throw Exception(response.data.toString());
       }
     } catch (e) {
