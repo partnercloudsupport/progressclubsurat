@@ -30,6 +30,7 @@ import 'package:progressclubsurat/Screens/MultipleEventList.dart';
 import 'package:progressclubsurat/Screens/CommitieScreen.dart';
 import 'package:progressclubsurat/Screens/DirectorySearch.dart';
 import 'package:progressclubsurat/Screens/GuestProfile.dart';
+import 'package:progressclubsurat/Screens/GuestDetails.dart';
 
 //void main() => runApp(MyApp());
 void main(){
@@ -112,6 +113,7 @@ class _MyAppState extends State<MyApp> {
         '/CommitieScreen': (context) => CommitieScreen(),
         '/DirectorySearch': (context) => DirectorySearch(),
         '/GuestProfile': (context) => GuestProfile(),
+        '/GuestDetails': (context) => GuestDetails(),
       },
       theme: ThemeData(
         fontFamily: 'Montserrat',
