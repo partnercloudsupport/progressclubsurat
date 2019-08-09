@@ -506,7 +506,6 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       Navigator.pushNamed(context, '/GuestProfile');
     }else{
       Navigator.pushNamed(context, '/MemberProfile');
-
     }
   }
 
