@@ -702,5 +702,31 @@ class Services {
     }
   }
 
+  //get Event From Server
+  static Future<List> GetDashboard(String startdate, String enddate) async {
+    String url = API_URL + 'Dashboard?startdate=$startdate&enddate=$enddate';
+    print("GetDashboard URL: " + url);
+    try {
+      Response response = await dio.get(url);
+      if (response.statusCode == 200) {
+        List list = [];
+        print("GetDashboard Response: " + response.data.toString());
+        var memberDataClass = response.data;
+        if (memberDataClass["IsSuccess"] == true &&
+            memberDataClass["IsRecord"] == true) {
+          print(memberDataClass["Data"]);
+          list = memberDataClass["Data"];
+        } else {
+          list = [];
+        }
+        return list;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("GetDashboard Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
 
 }

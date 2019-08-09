@@ -84,35 +84,11 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         ? new DateTime(now.year, now.month + 1, 0)
         : new DateTime(now.year + 1, 1, 0);
 
-    //print("${lastDayDateTime.day}-${lastDayDateTime.month}-${lastDayDateTime.year}");
-    //print("01-${lastDayDateTime.month}-${lastDayDateTime.year}");
+    String sdate = "${lastDayDateTime.day}-${lastDayDateTime.month}-${lastDayDateTime.year}";
+    String edate = "01-${lastDayDateTime.month}-${lastDayDateTime.year}";
 
     getLocalData();
-    _events = {
-      DateTime.parse('2019-07-03'): [
-        'Event A0',
-        'Event B0',
-        'Event C0',
-        'Event A0',
-        'Event B0',
-        'Event C0'
-      ],
-      DateTime.parse('2019-07-01'): ['Event A0'],
-      DateTime.parse('2019-07-04'): ['Event A0', 'Event B0', 'Event C0'],
-      DateTime.parse('2019-07-06'): ['Event A0', 'Event B0', 'Event C0'],
-      DateTime.parse('2019-07-10'): ['Event A0'],
-    };
-
-    _selectedEvents = _events[_selectedDay] ?? [];
-    _visibleEvents = _events;
-    _visibleHolidays = _holidays;
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-
-    _controller.forward();
+    getDashboardData(sdate,edate);
 
     _firebaseMessaging.getToken().then((String token) {
       print("Original Token:$token");
@@ -534,11 +510,75 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     }
   }
 
+  getDashboardData(String sdate,String edate) async {
+    try {
+      //check Internet Connection
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        Future res = Services.GetDashboard(sdate, edate);
+        res.then((data) async {
+          if (data != null && data.length > 0) {
+            setState(() {
+              isLoading = false;
+              list = data;
+            });
+
+            for(int i=0;i<data.length;i++){
+              
+            }
+
+            _events = {
+              DateTime.parse('2019-07-01'): ['Event A0'],
+              DateTime.parse('2019-07-04'): ['Event A0', 'Event B0', 'Event C0'],
+              DateTime.parse('2019-07-06'): ['Event A0', 'Event B0', 'Event C0'],
+              DateTime.parse('2019-07-10'): ['Event A0'],
+            };
+
+            _selectedEvents = _events[_selectedDay] ?? [];
+            _visibleEvents = _events;
+            _visibleHolidays = _holidays;
+
+            _controller = AnimationController(
+              vsync: this,
+              duration: const Duration(milliseconds: 100),
+            );
+
+            _controller.forward();
+
+
+
+
+
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            //showMsg("Try Again.");
+          }
+        }, onError: (e) {
+          print("Error : on getDashboardData $e");
+          showMsg("$e");
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        showMsg("No Internet Connection.");
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    //print(height.toString());
-
     return Scaffold(
       appBar: AppBar(
         title: Container(
