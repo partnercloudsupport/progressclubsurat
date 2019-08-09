@@ -21,6 +21,7 @@ import 'package:progressclubsurat/Screens/NotificationScreen.dart';
 import 'package:progressclubsurat/Screens/OtpVerification.dart';
 import 'package:progressclubsurat/Screens/FeedbackScreen.dart';
 import 'package:progressclubsurat/Screens/EventList.dart';
+import 'package:progressclubsurat/Screens/EventDetail.dart';
 import 'package:progressclubsurat/Screens/AskList.dart';
 import 'package:progressclubsurat/Screens/TaskList.dart';
 import 'package:progressclubsurat/Screens/MemberProfile.dart';
@@ -104,6 +105,7 @@ class _MyAppState extends State<MyApp> {
         '/OtpVerification': (context) => OtpVerification(),
         '/FeedbackScreen': (context) => FeedbackScreen(),
         '/EventList': (context) => EventList(),
+        '/EventList': (context) => EventDetail(),
         '/AskList': (context) => AskList(),
         '/TaskList': (context) => TaskList(),
         '/MemberProfile': (context) => MemberProfile(),

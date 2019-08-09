@@ -29,68 +29,80 @@ class _EventListComponentsState extends State<EventListComponents> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                '${widget.event["Title"]}',
-                style: TextStyle(
-                    fontSize: 16,
-                    color: cnst.appPrimaryMaterialColor,
-                    fontWeight: FontWeight.w600),
-              ),
-              Row(
-                children: <Widget>[
-                  Image.asset(
-                    'images/icon_event.png',
-                    height: 18,
-                    width: 18,
-                  ),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(
-                      '${widget.event["EventDate"].substring(8,10)}-'"${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.event["EventDate"].substring(0,10)).toString()))}-${widget.event["EventDate"].substring(0,4)}",
+              GestureDetector(
+                onTap: (){
+                  
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '${widget.event["Title"]}',
                       style: TextStyle(
-                        fontSize: 14,
-                        color: cnst.appPrimaryMaterialColor,
+                          fontSize: 16,
+                          color: cnst.appPrimaryMaterialColor,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Image.asset(
+                          'images/icon_event.png',
+                          height: 18,
+                          width: 18,
+                        ),
+                        Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: Text(
+                                '${widget.event["EventDate"].substring(8,10)}-'"${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.event["EventDate"].substring(0,10)).toString()))}-${widget.event["EventDate"].substring(0,4)}",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: cnst.appPrimaryMaterialColor,
+                                ),
+                              ),
+                            ))
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: ClipRRect(
+                        borderRadius: new BorderRadius.circular(6.0),
+                        child: /*Image.network(
+                      'https://png.pngtree.com/thumb_back/fh260/back_pic/03/98/85/2057f61fabc8d1b.jpg',
+                      height: 180,
+                      width: MediaQuery.of(context).size.width - 20,
+                      fit: BoxFit.fill,
+                    ),*/
+                        widget.event["Photo"] != null
+                            ? FadeInImage.assetNetwork(
+                          placeholder: 'images/icon_events.jpg',
+                          image: widget.event["Photo"],
+                          fit: BoxFit.fill,
+                          height: 180,
+                          width: MediaQuery.of(context).size.width - 20,
+                        )
+                            : Image.asset(
+                          'images/icon_events.jpg',
+                          fit: BoxFit.fill,
+                          height: 180,
+                          width: MediaQuery.of(context).size.width - 20,
+                        ),
                       ),
                     ),
-                  ))
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: ClipRRect(
-                  borderRadius: new BorderRadius.circular(6.0),
-                  child: /*Image.network(
-                    'https://png.pngtree.com/thumb_back/fh260/back_pic/03/98/85/2057f61fabc8d1b.jpg',
-                    height: 180,
-                    width: MediaQuery.of(context).size.width - 20,
-                    fit: BoxFit.fill,
-                  ),*/
-                  widget.event["Photo"] != null
-                      ? FadeInImage.assetNetwork(
-                    placeholder: 'images/icon_events.jpg',
-                    image: widget.event["Photo"],
-                    fit: BoxFit.fill,
-                    height: 180,
-                    width: MediaQuery.of(context).size.width - 20,
-                  )
-                      : Image.asset(
-                    'images/icon_events.jpg',
-                    fit: BoxFit.fill,
-                    height: 180,
-                    width: MediaQuery.of(context).size.width - 20,
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child: Text(
+                        '${widget.event["LongDesc"]}',
+                        maxLines: 3,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 5),
-                child: Text(
-                  '${widget.event["LongDesc"]}',
-                  maxLines: 3,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 13),
-                ),
-              ),
+
+
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
