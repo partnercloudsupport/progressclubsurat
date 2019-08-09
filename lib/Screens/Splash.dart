@@ -13,7 +13,6 @@ class _SplashState extends State<Splash> {
   void initState() {
     Timer(Duration(seconds: 3), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
       String MemberId = prefs.getString(cnst.Session.MemberId);
       if (MemberId != null && MemberId != "")
         Navigator.pushReplacementNamed(context, '/Dashboard');

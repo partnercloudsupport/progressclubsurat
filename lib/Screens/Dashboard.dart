@@ -111,6 +111,12 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     });
   }
 
+  _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(cnst.Session.MemberId);
+    Navigator.pushReplacementNamed(context, "/Login");
+  }
+
   //send fcm token
   sendFCMTokan() async {
     try {
@@ -704,7 +710,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         child: ListView(
           children: <Widget>[
             new ListTile(
-                leading: Icon(Icons.directions),
+                leading: Icon(Icons.directions,color: cnst.appPrimaryMaterialColor),
                 title: new Text("Member Directory"),
                 onTap: () {
                   Navigator.pop(context);
@@ -715,7 +721,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.file_download),
+                leading: Icon(Icons.file_download,color: cnst.appPrimaryMaterialColor),
                 title: new Text("Download"),
                 onTap: () {
                   Navigator.pop(context);
@@ -727,7 +733,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.assignment),
+                leading: Icon(Icons.assignment,color: cnst.appPrimaryMaterialColor),
                 title: new Text("Event"),
                 onTap: () {
                   Navigator.pop(context);
@@ -739,7 +745,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.assignment),
+                leading: Icon(Icons.assignment,color: cnst.appPrimaryMaterialColor),
                 title: new Text("Assignments"),
                 onTap: () {
                   Navigator.pop(context);
@@ -753,7 +759,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             new ListTile(
                 leading: Image.asset(
                   'images/icon_ask.png',
-                  color: Colors.grey[600],
+                  color: cnst.appPrimaryMaterialColor,
                   height: 28,
                   width: 28,
                 ),
@@ -767,7 +773,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.notifications),
+                leading: Icon(Icons.notifications,color: cnst.appPrimaryMaterialColor),
                 title: new Text("Notification"),
                 onTap: () {
                   Navigator.pop(context);
@@ -779,11 +785,22 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.feedback),
+                leading: Icon(Icons.feedback,color: cnst.appPrimaryMaterialColor),
                 title: new Text("Feedback"),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/FeedbackScreen');
+                }),
+            Divider(
+              height: 2,
+              color: Colors.black,
+            ),
+            new ListTile(
+                leading: Icon(Icons.exit_to_app,color: cnst.appPrimaryMaterialColor),
+                title: new Text("Logout"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _logout();
                 }),
             Divider(
               height: 2,
