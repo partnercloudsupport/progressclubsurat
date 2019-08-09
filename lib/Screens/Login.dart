@@ -214,7 +214,7 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
-                      Padding(
+                      /*Padding(
                         padding: const EdgeInsets.only(top: 30),
                         child: GestureDetector(
                           onTap: () {
@@ -235,7 +235,7 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                         ),
-                      )
+                      )*/
                     ],
                   ),
                 ],
