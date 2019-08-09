@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 
@@ -8,6 +9,8 @@ import 'package:progressclubsurat/Common/Constants.dart';
 import 'package:progressclubsurat/Common/Services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:progressclubsurat/Component/LoadinComponent.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 
 class GuestProfile extends StatefulWidget {
@@ -26,6 +29,9 @@ class _GuestProfileState extends State<GuestProfile> {
   TextEditingController edtEmail = new TextEditingController();
   TextEditingController edtCmpName = new TextEditingController();
 
+  //profile editing
+
+  File _imageOffer;
 
   @override
   void initState() {
@@ -33,7 +39,6 @@ class _GuestProfileState extends State<GuestProfile> {
     super.initState();
     getMemberDetailsFromServer();
   }
-
 
   showHHMsg(String msg) {
     showDialog(
@@ -121,7 +126,6 @@ class _GuestProfileState extends State<GuestProfile> {
     }
   }
 
-
   setData(List list) async {
     setState(() {
       //personal Info
@@ -170,29 +174,54 @@ class _GuestProfileState extends State<GuestProfile> {
                             children: <Widget>[
                               Stack(
                                 children: <Widget>[
-                                  AvatarGlow(
-                                    startDelay: Duration(milliseconds: 1000),
-                                    glowColor: cnst.appPrimaryMaterialColor,
-                                    endRadius: 80.0,
-                                    duration: Duration(milliseconds: 2000),
-                                    repeat: true,
-                                    showTwoGlows: true,
-                                    repeatPauseDuration:
-                                        Duration(milliseconds: 100),
-                                    child: Material(
-                                      elevation: 8.0,
-                                      shape: CircleBorder(),
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.grey[100],
-                                        child: ClipOval(
-                                          child: Image.network(
-                                            'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
-                                            height: 120,
-                                            width: 120,
-                                            fit: BoxFit.fill,
+                                  GestureDetector(
+                                    onTap: () {
+                                      _profileImagePopup(context);
+                                    },
+                                    child: AvatarGlow(
+                                      startDelay: Duration(milliseconds: 1000),
+                                      glowColor: cnst.appPrimaryMaterialColor,
+                                      endRadius: 80.0,
+                                      duration: Duration(milliseconds: 2000),
+                                      repeat: true,
+                                      showTwoGlows: true,
+                                      repeatPauseDuration:
+                                          Duration(milliseconds: 100),
+                                      child: Material(
+                                        elevation: 8.0,
+                                        shape: CircleBorder(),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.grey[100],
+                                          child: ClipOval(
+                                            child: list[0]["Image"] == "" &&
+                                                    list[0]["Image"] == null
+                                                ? Image.asset(
+                                                    'images/icon_user.png',
+                                                    height: 120,
+                                                    width: 120,
+                                                    fit: BoxFit.fill,
+                                                  )
+                                                : _imageOffer == null
+                                                    ? FadeInImage.assetNetwork(
+                                                        placeholder:
+                                                            'images/icon_user.png',
+                                                        image:
+                                                            "http://pmc.studyfield.com/" +
+                                                                list[0]
+                                                                    ["Image"],
+                                                        height: 120,
+                                                        width: 120,
+                                                        fit: BoxFit.fill,
+                                                      )
+                                                    : Image.file(
+                                                        File(_imageOffer.path),
+                                                        height: 120,
+                                                        width: 120,
+                                                        fit: BoxFit.fill,
+                                                      ),
                                           ),
+                                          radius: 50.0,
                                         ),
-                                        radius: 50.0,
                                       ),
                                     ),
                                   ),
@@ -365,5 +394,110 @@ class _GuestProfileState extends State<GuestProfile> {
               ),
       ),
     );
+  }
+
+  sendUserProfileImg() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+
+        String filename = "";
+        File compressedFile;
+
+        if (_imageOffer != null) {
+          var file = _imageOffer.path.split('/');
+          filename = "user.png";
+
+          if (file != null && file.length > 0)
+            filename = file[file.length - 1].toString();
+
+          ImageProperties properties =
+              await FlutterNativeImage.getImageProperties(_imageOffer.path);
+          compressedFile = await FlutterNativeImage.compressImage(
+              _imageOffer.path,
+              quality: 80,
+              targetWidth: 600,
+              targetHeight:
+                  (properties.height * 600 / properties.width).round());
+        }
+
+        FormData formData = new FormData.from(
+          {
+            "Id": list[0]["Id"].toString(),
+            "Image": _imageOffer != null
+                ? new UploadFileInfo(compressedFile, filename.toString())
+                : null
+          },
+        );
+        Services.UploadMemberImage(formData).then((data) async {
+          setState(() {
+            isLoading = false;
+          });
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          if (data != "" && data != "0" && data != "") {
+            await prefs.setString(Session.Photo, data.Data[0]);
+            showHHMsg("Profile Updated Successfully.");
+          } else {
+            showMsg(data.Message);
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        showMsg("No Internet Connection.");
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }
+
+  void _profileImagePopup(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                    leading: new Icon(Icons.camera_alt),
+                    title: new Text('Camera'),
+                    onTap: () async {
+                      var image = await ImagePicker.pickImage(
+                        source: ImageSource.camera,
+                      );
+                      if (image != null)
+                        setState(() {
+                          _imageOffer = image;
+                        });
+                      Navigator.pop(context);
+                      sendUserProfileImg();
+                    }),
+                new ListTile(
+                    leading: new Icon(Icons.photo),
+                    title: new Text('Gallery'),
+                    onTap: () async {
+                      var image = await ImagePicker.pickImage(
+                        source: ImageSource.gallery,
+                      );
+                      if (image != null)
+                        setState(() {
+                          _imageOffer = image;
+                        });
+                      Navigator.pop(context);
+                    }),
+              ],
+            ),
+          );
+        });
   }
 }

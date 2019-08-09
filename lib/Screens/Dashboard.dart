@@ -157,7 +157,12 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     getDashboardData(chapterId, sdate, edate);
   }
 
-  final List<Widget> _children = [];
+  final List<Widget> _children = [
+    //Home(),
+    //MemberServices(),
+    //Offers(),
+    //More(),
+  ];
 
   void onTabTapped(int index) {
     setState(() {
@@ -779,14 +784,14 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
           ],
         ),
       ),
-      bottomNavigationBar: AnimatedBottomBar(
+      /*bottomNavigationBar: AnimatedBottomBar(
           barItems: widget.barItems,
           animationDuration: Duration(milliseconds: 350),
           onBarTab: (index) {
             setState(() {
               _currentIndex = index;
             });
-          }),
+          }),*/
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,

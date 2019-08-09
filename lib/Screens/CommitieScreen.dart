@@ -52,7 +52,6 @@ class _CommitieScreenState extends State<CommitieScreen> {
 
   getCommitiesFromServer() async {
     try {
-
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String ChapterId = prefs.getString(Session.ChapterId);
 

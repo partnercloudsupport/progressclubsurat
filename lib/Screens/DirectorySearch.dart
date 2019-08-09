@@ -37,6 +37,7 @@ class _DirectorySearchState extends State<DirectorySearch> {
               });
             } else {
               setState(() {
+                list.clear();
                 isLoading = false;
               });
               showMsg("Try Again.");
@@ -55,6 +56,7 @@ class _DirectorySearchState extends State<DirectorySearch> {
           showMsg("No Internet Connection.");
         }
       }else
+
         showMsg("Please Enter Any Value");
       //check Internet Connection
     } on SocketException catch (_) {
@@ -136,7 +138,9 @@ class _DirectorySearchState extends State<DirectorySearch> {
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
-                        _getSearchData();
+                        if(!isLoading){
+                          _getSearchData();
+                        }
                       },
                       child: Container(
                         height: 45,

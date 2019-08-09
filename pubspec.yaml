@@ -36,6 +36,8 @@ dependencies:
   soundpool: ^0.5.3
   firebase_messaging: ^5.1.2
   flutter_cupertino_date_picker: ^0.3.0
+  image_picker: ^0.6.1+1
+  flutter_native_image: ^0.0.4
 
 dev_dependencies:
   flutter_test:

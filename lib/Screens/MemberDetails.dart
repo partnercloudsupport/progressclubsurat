@@ -406,47 +406,35 @@ class _MemberDetailsState extends State<MemberDetails> {
                                   margin: EdgeInsets.only(top: 10),
                                   child: Column(
                                     children: <Widget>[
-                                      Stack(
-                                        children: <Widget>[
-                                          AvatarGlow(
-                                            startDelay:
-                                                Duration(milliseconds: 1000),
-                                            glowColor:
-                                                cnst.appPrimaryMaterialColor,
-                                            endRadius: 80.0,
-                                            duration:
-                                                Duration(milliseconds: 2000),
-                                            repeat: true,
-                                            showTwoGlows: true,
-                                            repeatPauseDuration:
-                                                Duration(milliseconds: 100),
-                                            child: Material(
-                                              elevation: 8.0,
-                                              shape: CircleBorder(),
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.grey[100],
-                                                child: ClipOval(
-                                                  child: Image.network(
-                                                    'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
-                                                    height: 120,
-                                                    width: 120,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                                radius: 50.0,
+                                      AvatarGlow(
+                                        startDelay:
+                                        Duration(milliseconds: 1000),
+                                        glowColor:
+                                        cnst.appPrimaryMaterialColor,
+                                        endRadius: 80.0,
+                                        duration:
+                                        Duration(milliseconds: 2000),
+                                        repeat: true,
+                                        showTwoGlows: true,
+                                        repeatPauseDuration:
+                                        Duration(milliseconds: 100),
+                                        child: Material(
+                                          elevation: 8.0,
+                                          shape: CircleBorder(),
+                                          child: CircleAvatar(
+                                            backgroundColor:
+                                            Colors.grey[100],
+                                            child: ClipOval(
+                                              child: Image.network(
+                                                'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
+                                                height: 120,
+                                                width: 120,
+                                                fit: BoxFit.fill,
                                               ),
                                             ),
+                                            radius: 50.0,
                                           ),
-                                          Container(
-                                              margin: EdgeInsets.only(
-                                                  left: 100, top: 100),
-                                              child: Image.asset(
-                                                'images/plus.png',
-                                                width: 25,
-                                                height: 25,
-                                              ))
-                                        ],
+                                        ),
                                       ),
                                       Card(
                                         margin: EdgeInsets.all(10),
