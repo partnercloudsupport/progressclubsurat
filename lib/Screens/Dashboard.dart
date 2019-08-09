@@ -65,7 +65,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   //loading var
   bool isLoading = false;
 
-  String memberName = "", memberCmpName = "", memberPhoto = "", memberId = "";
+  String memberName = "", memberCmpName = "", memberPhoto = "", memberId = "",memberType = "";
   int soundId;
   int _currentIndex = 0;
   Soundpool pool = Soundpool(streamType: StreamType.notification);
@@ -157,6 +157,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       memberName = prefs.getString(Session.Name);
       memberCmpName = prefs.getString(Session.CompanyName);
       memberPhoto = prefs.getString(Session.Photo);
+      memberType = prefs.getString(Session.Type);
       //print(memberName);
     });
   }
@@ -522,6 +523,15 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     //densih ubhal
     return memberName;
   }
+  saveAndNavigator() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(Session.memId,memberId);
+    if(memberType=="guest"){
+      Navigator.pushNamed(context, '/GuestProfile');
+    }else{
+      Navigator.pushNamed(context, '/MemberProfile');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -537,8 +547,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  //Navigator.pushReplacementNamed(context, '/MemberProfile');
-                  Navigator.pushNamed(context, '/MemberProfile');
+                  saveAndNavigator();
                 },
                 child: AvatarGlow(
                   glowColor: Colors.white,
