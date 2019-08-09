@@ -62,7 +62,7 @@ class _CommitiesComponentsState extends State<CommitiesComponents> {
       columnContent.add(GestureDetector(
         onTap: () {
           print('${list[i]["MemberName"]}');
-          saveAndNavigator(list[i]["Id"].toString());
+          saveAndNavigator(list[i]["Id"].toString(), list[i]["Type"]);
           //Navigator.pushNamed(context, '/CommitieScreen');
         },
         child: new ListTile(
@@ -124,16 +124,13 @@ class _CommitiesComponentsState extends State<CommitiesComponents> {
     return columnContent;
   }
 
-  saveAndNavigator(String memberId) async{
+  saveAndNavigator(String memberId, String type) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(Session.memId,memberId);
-    /*if(widget.memberList['Type']=="guest"){
+    await prefs.setString(Session.memId, memberId);
+    if (type == "guest") {
       Navigator.pushNamed(context, '/GuestDetails');
-    }else{
+    } else {
       Navigator.pushNamed(context, '/MemberDetails');
-    }*/
-    Navigator.pushNamed(context, '/MemberDetails');
+    }
   }
-
-
 }

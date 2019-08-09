@@ -19,10 +19,19 @@ class MemberDirectoryComponent extends StatefulWidget {
 
 class _MemberDirectoryComponentState extends State<MemberDirectoryComponent> {
 
+//  saveAndNavigator() async{
+//    SharedPreferences prefs = await SharedPreferences.getInstance();
+//    await prefs.setString(Session.memId,widget.memberList["Id"].toString());
+//    Navigator.pushNamed(context, '/MemberDetails');
+//  }
   saveAndNavigator() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(Session.memId,widget.memberList["Id"].toString());
-    Navigator.pushNamed(context, '/MemberDetails');
+    if(widget.memberList['Type']=="guest"){
+      Navigator.pushNamed(context, '/GuestDetails');
+    }else{
+      Navigator.pushNamed(context, '/MemberDetails');
+    }
   }
 
   _openWhatsapp() {
