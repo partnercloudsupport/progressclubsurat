@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
+import 'package:progressclubsurat/Screens/EventDetail.dart';
 import 'package:progressclubsurat/Screens/EventGallery.dart';
 
 class EventListComponents extends StatefulWidget {
@@ -31,7 +32,7 @@ class _EventListComponentsState extends State<EventListComponents> {
             children: <Widget>[
               GestureDetector(
                 onTap: (){
-                  Navigator.pushNamed(context, "/")
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetail(Event: widget.event)));
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
