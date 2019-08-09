@@ -501,7 +501,6 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     //densih ubhal
     return memberName;
   }
-
   saveAndNavigator() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(Session.memId,memberId);
@@ -642,7 +641,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "${setdata()}",
+                      "Name",
                       style: TextStyle(fontSize: 14),
                       maxLines: 1,
                     ),
