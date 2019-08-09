@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -10,8 +11,16 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   @override
   void initState() {
-    Timer(Duration(seconds: 3),
-            () => Navigator.pushReplacementNamed(context, '/Login'));
+    Timer(Duration(seconds: 3), () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      String MemberId = prefs.getString(cnst.Session.MemberId);
+      if (MemberId != null && MemberId != "")
+        Navigator.pushReplacementNamed(context, '/Dashboard');
+      else {
+        Navigator.pushReplacementNamed(context, '/Login');
+      }
+    });
     // TODO: implement initState
     super.initState();
   }
@@ -19,7 +28,7 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: Container(
           width: MediaQuery.of(context).size.width,
           child: Column(
@@ -35,8 +44,8 @@ class _SplashState extends State<Splash> {
                       color: cnst.secondaryColor,
                       fontSize: 25,
                       fontWeight: FontWeight.w700
-                    //fontSize: 18.0,
-                  ),
+                      //fontSize: 18.0,
+                      ),
                 ),
               )
             ],
