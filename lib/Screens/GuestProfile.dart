@@ -154,6 +154,7 @@ class _GuestProfileState extends State<GuestProfile> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           String memberId = prefs.getString(Session.MemberId);
           var now = new DateTime.now();
+
           var data = {
             'Id': memberId,
             'Name': edtName.text,
