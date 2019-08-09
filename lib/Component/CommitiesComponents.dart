@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
+import 'package:progressclubsurat/Common/Constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'MemberDirectoryComponent.dart';
 
@@ -60,6 +62,7 @@ class _CommitiesComponentsState extends State<CommitiesComponents> {
       columnContent.add(GestureDetector(
         onTap: () {
           print('${list[i]["MemberName"]}');
+          saveAndNavigator(list[i]["Id"].toString());
           //Navigator.pushNamed(context, '/CommitieScreen');
         },
         child: new ListTile(
@@ -120,4 +123,17 @@ class _CommitiesComponentsState extends State<CommitiesComponents> {
     }
     return columnContent;
   }
+
+  saveAndNavigator(String memberId) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(Session.memId,memberId);
+    /*if(widget.memberList['Type']=="guest"){
+      Navigator.pushNamed(context, '/GuestDetails');
+    }else{
+      Navigator.pushNamed(context, '/MemberDetails');
+    }*/
+    Navigator.pushNamed(context, '/MemberDetails');
+  }
+
+
 }
