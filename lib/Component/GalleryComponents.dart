@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
+import 'package:progressclubsurat/Screens/EventGallaryScroll.dart';
 
 class GalleryComponents extends StatefulWidget {
-
   var eventGallery;
+
   GalleryComponents(this.eventGallery);
 
   @override
@@ -28,23 +29,33 @@ class _GalleryComponentsState extends State<GalleryComponents> {
           //padding: EdgeInsets.all(10),
           child: ClipRRect(
             borderRadius: new BorderRadius.circular(10.0),
-            child: /*Image.network(
+            child:
+                /*Image.network(
                 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
               height: 100,
               fit: BoxFit.fill,
             )*/
-            widget.eventGallery["EventPhoto1"] != null
-                ? FadeInImage.assetNetwork(
-              placeholder: 'images/icon_events.jpg',
-              image: widget.eventGallery["EventPhoto1"],
-              fit: BoxFit.fill,
-              height: 100,
-            )
-                : Image.asset(
-              'images/icon_events.jpg',
-              fit: BoxFit.fill,
-              height: 100,
-            ),
+                GestureDetector(
+                  onTap: (){
+                    print("ddd");
+                    Navigator.of(context).push(PageRouteBuilder(
+                        opaque: false,
+                        pageBuilder: (BuildContext context, _, __) =>
+                            EventGallaryScroll()));
+                  },
+                  child: widget.eventGallery["EventPhoto1"] != null
+                      ? FadeInImage.assetNetwork(
+                          placeholder: 'images/icon_events.jpg',
+                          image: widget.eventGallery["EventPhoto1"],
+                          fit: BoxFit.fill,
+                          height: 100,
+                        )
+                      : Image.asset(
+                          'images/icon_events.jpg',
+                          fit: BoxFit.fill,
+                          height: 100,
+                        ),
+                ),
           ),
         ),
       ),

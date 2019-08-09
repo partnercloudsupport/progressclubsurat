@@ -42,7 +42,7 @@ class _MemberProfileState extends State<MemberProfile> {
   bool isPersonalLoading = false;
   bool isBusinessLoading = false;
   bool isMoreInfoLoading = false;
-  List list=new  List();
+  List list = new List();
   bool isEditable = false;
   bool isBusinessEditable = false;
   bool isMoreEditable = false;
@@ -147,12 +147,17 @@ class _MemberProfileState extends State<MemberProfile> {
     setState(() {
       //personal Info
       edtName.text = list[0]["Name"];
-      edtDOB.text = list[0]["DateOfBirth"].toString().substring(0, 10);
+      edtDOB.text =
+          list[0]["DateOfBirth"] == "" || list[0]["DateOfBirth"] == null
+              ? ""
+              : list[0]["DateOfBirth"].toString().substring(0, 10);
       edtGender.text = list[0]["Gender"];
       edtAge.text = list[0]["Age"].toString();
-      edtAnniversary.text = list[0]["Anniversery"].toString();
+      edtAnniversary.text =
+      list[0]["Anniversery"] == "" || list[0]["Anniversery"] == null
+          ? ""
+          : list[0]["Anniversery"].toString();
       edtAddress.text = list[0]["ResidenceAddress"];
-
       //Business Info
       edtCmpName.text = list[0]["CompanyName"];
       edtBusinessAddress.text = list[0]["OfficeAddress"];

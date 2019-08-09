@@ -5,6 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 //Common Dart File
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
+import 'package:progressclubsurat/Screens/EventGallaryScroll.dart';
 
 //Screen Dart File
 import 'package:progressclubsurat/Screens/Splash.dart';
@@ -116,6 +117,7 @@ class _MyAppState extends State<MyApp> {
         '/DirectorySearch': (context) => DirectorySearch(),
         '/GuestProfile': (context) => GuestProfile(),
         '/GuestDetails': (context) => GuestDetails(),
+        '/EventGallaryScroll': (context) => EventGallaryScroll(),
       },
       theme: ThemeData(
         fontFamily: 'Montserrat',

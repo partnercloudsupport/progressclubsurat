@@ -22,7 +22,7 @@ class _MemberSearchComponentState extends State<MemberSearchComponent> {
   saveAndNavigator() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(Session.memId,widget.memberList["Id"].toString());
-    if(widget.memberList['Type']=="guest"){
+    if((widget.memberList['Type'].toString().toLowerCase()=="guest")){
       Navigator.pushNamed(context, '/GuestDetails');
     }else{
       Navigator.pushNamed(context, '/MemberDetails');

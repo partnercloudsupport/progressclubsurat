@@ -68,6 +68,9 @@ class _DirectorySearchState extends State<DirectorySearch> {
   }
 
   showMsg(String msg) {
+    setState(() {
+      list=[];
+    });
     showDialog(
       context: context,
       builder: (BuildContext context) {
