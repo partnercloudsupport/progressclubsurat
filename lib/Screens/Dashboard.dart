@@ -22,6 +22,8 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:soundpool/soundpool.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+import 'package:progressclubsurat/Screens/MultipleEventList.dart';
+
 // Example holidays
 final Map<DateTime, List> _holidays = {
   /*DateTime(2019, 1, 1): ['New Year\'s Day'],
@@ -175,12 +177,18 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       _selectedDay = day;
       _selectedEvents = events;
     });
-    //print(_selectedDay);
-    if (events.length == 1) {
+    String selectedDate = day.toString().substring(0, 10);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MultipleEventList(date: selectedDate,chapterId: chapterId),
+      ),
+    );
+    /*if (events.length == 1) {
       showEventDialog(_selectedEvents);
     } else if (events.length > 1) {
       Navigator.pushNamed(context, '/MultipleEventList');
-    }
+    }*/
   }
 
   //show event dialog
@@ -932,7 +940,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       print(first);
       print(last);
 
-      getDashboardData(chapterId, first.toString().substring(0,10), last.toString().substring(0,10));
+      getDashboardData(chapterId, first.toString().substring(0, 10),
+          last.toString().substring(0, 10));
 
       _visibleEvents = Map.fromEntries(
         _events.entries.where(

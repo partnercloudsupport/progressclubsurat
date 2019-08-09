@@ -821,4 +821,57 @@ class Services {
     }
   }
 
+  //get Event From Server
+  static Future<List> GetMeetingListByDate(String chapterId,String date) async {
+    String url = API_URL + 'GetMeetingListByDate?chapterId=$chapterId&eventdate=$date';
+    print("GetMeetingListByDate URL: " + url);
+    try {
+      Response response = await dio.get(url);
+      if (response.statusCode == 200) {
+        List list = [];
+        print("GetMeetingListByDate Response: " + response.data.toString());
+        var memberDataClass = response.data;
+        if (memberDataClass["IsSuccess"] == true &&
+            memberDataClass["IsRecord"] == true) {
+          print(memberDataClass["Data"]);
+          list = memberDataClass["Data"];
+        } else {
+          list = [];
+        }
+        return list;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("GetMeetingListByDate Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
+  //get Event From Server
+  static Future<List> GetEventByDate(String date) async {
+    String url = API_URL + 'GetEventByDate?eventdate=$date';
+    print("GetEventByDate URL: " + url);
+    try {
+      Response response = await dio.get(url);
+      if (response.statusCode == 200) {
+        List list = [];
+        print("GetEventByDate Response: " + response.data.toString());
+        var memberDataClass = response.data;
+        if (memberDataClass["IsSuccess"] == true &&
+            memberDataClass["IsRecord"] == true) {
+          print(memberDataClass["Data"]);
+          list = memberDataClass["Data"];
+        } else {
+          list = [];
+        }
+        return list;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("GetEventByDate Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
 }

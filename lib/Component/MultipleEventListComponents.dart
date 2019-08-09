@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
 
 class MultipleEventListComponents extends StatefulWidget {
+  var data;
+  MultipleEventListComponents(this.data);
+
   @override
   _MultipleEventListComponentsState createState() =>
       _MultipleEventListComponentsState();
@@ -15,12 +18,11 @@ class _MultipleEventListComponentsState
     return Container(
       padding: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 20),
       decoration: BoxDecoration(
-          border:
-          Border.all(color: Colors.black, width: 0.5),
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(6),
-              bottomRight: Radius.circular(6)),
-          color: cnst.appPrimaryMaterialColor),
+        border: Border.all(color: Colors.black, width: 0.5),
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+        color: Colors.white,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         //mainAxisAlignment: MainAxisAlignment.center,
@@ -84,8 +86,7 @@ class _MultipleEventListComponentsState
                       ),
                       Text(
                         ' 24-Jan-2019',
-                        style: TextStyle(
-                            fontSize: 13, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                       )
                     ],
                   ),
@@ -104,8 +105,7 @@ class _MultipleEventListComponentsState
                       ),
                       Text(
                         ' 24-Jan-2019',
-                        style: TextStyle(
-                            fontSize: 13, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                       )
                     ],
                   ),
@@ -168,8 +168,7 @@ class _MultipleEventListComponentsState
                       margin: EdgeInsets.only(top: 10),
                       height: 40,
                       decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10))),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
@@ -197,8 +196,7 @@ class _MultipleEventListComponentsState
                       margin: EdgeInsets.only(top: 10),
                       height: 40,
                       decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10))),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
@@ -211,8 +209,7 @@ class _MultipleEventListComponentsState
                         child: Text(
                           "Register & Pay",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 14.0),
+                          style: TextStyle(color: Colors.white, fontSize: 14.0),
                         ),
                       ),
                     ),
