@@ -155,6 +155,33 @@ class Services {
     }
   }
 
+  static Future<List> getSearchMember(String keyword) async {
+    String url = API_URL + 'SearchMember?keyword=$keyword';
+    print("getSearchMember URL: " + url);
+    try {
+      Response response = await dio.get(url);
+
+      if (response.statusCode == 200) {
+        List list = [];
+        print("getSearchMember Response: " + response.data.toString());
+        var memberDataClass = response.data;
+        if (memberDataClass["IsSuccess"] == true &&
+            memberDataClass["IsRecord"] == true) {
+          print(memberDataClass["Data"]);
+          list = memberDataClass["Data"];
+        } else {
+          list = [];
+        }
+        return list;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("getSearchMember Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
   //get Directory From Server
   static Future<List> GetDirectory() async {
     String url = API_URL + 'GetChapterList';

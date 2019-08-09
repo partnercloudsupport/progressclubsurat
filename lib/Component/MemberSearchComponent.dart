@@ -5,19 +5,19 @@ import 'package:progressclubsurat/Screens/MemberDetails.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MemberDirectoryComponent extends StatefulWidget {
+class MemberSearchComponent extends StatefulWidget {
   var memberList;
 
   //images/icon_member.jpg
 
-  MemberDirectoryComponent(this.memberList);
+  MemberSearchComponent(this.memberList);
 
   @override
-  _MemberDirectoryComponentState createState() =>
-      _MemberDirectoryComponentState();
+  _MemberSearchComponentState createState() =>
+      _MemberSearchComponentState();
 }
 
-class _MemberDirectoryComponentState extends State<MemberDirectoryComponent> {
+class _MemberSearchComponentState extends State<MemberSearchComponent> {
 
   saveAndNavigator() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -60,37 +60,37 @@ class _MemberDirectoryComponentState extends State<MemberDirectoryComponent> {
                     ClipOval(
                       child: widget.memberList["Image"] != null
                           ? FadeInImage.assetNetwork(
-                              placeholder: 'images/icon_user.png',
-                              image: "http://pmc.studyfield.com/" +
-                                  widget.memberList["Image"],
-                              height: 50,
-                              width: 50,
-                              fit: BoxFit.cover,
-                            )
+                        placeholder: 'images/icon_user.png',
+                        image: "http://pmc.studyfield.com/" +
+                            widget.memberList["Image"],
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      )
                           : Image.asset(
-                              'images/icon_user.png',
-                              height: 50,
-                              width: 50,
-                              fit: BoxFit.cover,
-                            ),
+                        'images/icon_user.png',
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     Expanded(
                         child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            '${widget.memberList["Name"]}',
-                            style: TextStyle(
-                                color: cnst.appPrimaryMaterialColor,
-                                fontSize: 18),
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                '${widget.memberList["PersonName"]}',
+                                style: TextStyle(
+                                    color: cnst.appPrimaryMaterialColor,
+                                    fontSize: 18),
+                              ),
+                              Text('${widget.memberList["CompanyName"]}'),
+                            ],
                           ),
-                          Text('${widget.memberList["CompanyName"]}'),
-                        ],
-                      ),
-                    )),
+                        )),
                     GestureDetector(
                       onTap: () {
                         _openWhatsapp();

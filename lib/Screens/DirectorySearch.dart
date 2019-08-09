@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 //Common Dart File
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
 import 'package:progressclubsurat/Common/Services.dart';
+import 'package:progressclubsurat/Component/MemberSearchComponent.dart';
 
 import '../Component/LoadinComponent.dart';
 import '../Component/MemberDirectoryComponent.dart';
@@ -15,9 +18,70 @@ class DirectorySearch extends StatefulWidget {
 class _DirectorySearchState extends State<DirectorySearch> {
   bool isLoading = false;
   TextEditingController searchController = new TextEditingController();
+  List list = new List();
 
-  _getSearchData() async{
+  _getSearchData() async {
+    try {
+      if (searchController.text != null && searchController.text != "") {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            isLoading = true;
+          });
+          Future res = Services.getSearchMember(searchController.text);
+          res.then((data) async {
+            if (data != null && data.length > 0) {
+              setState(() {
+                isLoading = false;
+                list = data;
+              });
+            } else {
+              setState(() {
+                isLoading = false;
+              });
+              showMsg("Try Again.");
+            }
+          }, onError: (e) {
+            print("Error : on searchMember Call $e");
+            showMsg("$e");
+            setState(() {
+              isLoading = false;
+            });
+          });
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          showMsg("No Internet Connection.");
+        }
+      }else
+        showMsg("Please Enter Any Value");
+      //check Internet Connection
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }
 
+  showMsg(String msg) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Error"),
+          content: new Text(msg),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -83,33 +147,33 @@ class _DirectorySearchState extends State<DirectorySearch> {
                         child: Center(
                             child: Text("Search",
                                 style: TextStyle(
-                                     fontSize: 16, color: Colors.white))),
+                                    fontSize: 16, color: Colors.white))),
                       ),
                     ),
                   ),
                 )
               ],
             ),
-            /*Expanded(
+            Expanded(
               child: Container(
                 child: isLoading
                     ? LoadinComponent()
                     : list.length != 0 && list != null
-                    ? ListView.builder(
-                    padding: EdgeInsets.only(top: 5),
-                    itemCount: list.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return MemberDirectoryComponent(list[index]);
-                    })
-                    : Container(
-                  child: Center(
-                      child: Text('No Data Found.',
-                          style: TextStyle(
-                              color: cnst.appPrimaryMaterialColor,
-                              fontSize: 20))),
-                ),
+                        ? ListView.builder(
+                            padding: EdgeInsets.only(top: 5),
+                            itemCount: list.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return MemberSearchComponent(list[index]);
+                            })
+                        : Container(
+                            child: Center(
+                                child: Text('No Data Found.',
+                                    style: TextStyle(
+                                        color: cnst.appPrimaryMaterialColor,
+                                        fontSize: 20))),
+                          ),
               ),
-            )*/
+            )
           ],
         ),
       ),
