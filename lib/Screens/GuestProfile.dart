@@ -132,7 +132,7 @@ class _GuestProfileState extends State<GuestProfile> {
   setData(List list) async {
     setState(() {
       //personal Info
-      memberImg = list[0]["Image"];
+      memberImg = list[0]["Image"].toString();
       memberId = list[0]["Id"];
       edtName.text = list[0]["Name"];
       edtEmail.text = list[0]["Email"];
@@ -262,7 +262,7 @@ class _GuestProfileState extends State<GuestProfile> {
                                               backgroundColor: Colors.grey[100],
                                               child: ClipOval(
                                                 child: memberImg == "" &&
-                                                        memberImg == null
+                                                        memberImg == "null"
                                                     ? Image.asset(
                                                         'images/icon_user.png',
                                                         height: 120,
@@ -274,9 +274,7 @@ class _GuestProfileState extends State<GuestProfile> {
                                                             .assetNetwork(
                                                             placeholder:
                                                                 'images/icon_user.png',
-                                                            image:
-                                                                "http://pmcapi.studyfield.com/" +
-                                                                    memberImg,
+                                                            image:memberImg.contains("http")?memberImg:"http://pmcapi.studyfield.com/" + memberImg,
                                                             height: 120,
                                                             width: 120,
                                                             fit: BoxFit.fill,

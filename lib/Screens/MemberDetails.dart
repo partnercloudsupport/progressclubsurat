@@ -47,6 +47,9 @@ class _MemberDetailsState extends State<MemberDetails> {
   bool isBusinessEditable = false;
   bool isMoreEditable = false;
 
+  int memberId = 0;
+  String memberImg = "";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -114,6 +117,7 @@ class _MemberDetailsState extends State<MemberDetails> {
           if (data != null && data.length > 0) {
             setState(() {
               list = data;
+
               setData(list);
             });
           } else {
@@ -143,6 +147,8 @@ class _MemberDetailsState extends State<MemberDetails> {
   setData(List list) async {
     setState(() {
       //personal Info
+      memberImg = list[0]["Image"];
+      memberId = list[0]["Id"];
       edtName.text = list[0]["Name"];
       edtDOB.text =
           list[0]["DateOfBirth"] == "" || list[0]["DateOfBirth"] == null
@@ -426,12 +432,23 @@ class _MemberDetailsState extends State<MemberDetails> {
                                                 backgroundColor:
                                                     Colors.grey[100],
                                                 child: ClipOval(
-                                                  child: Image.network(
-                                                    'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
-                                                    height: 120,
-                                                    width: 120,
-                                                    fit: BoxFit.fill,
-                                                  ),
+                                                  child: memberImg == "" &&
+                                                          memberImg == "null"
+                                                      ? Image.asset(
+                                                          'images/icon_user.png',
+                                                          height: 120,
+                                                          width: 120,
+                                                          fit: BoxFit.fill,
+                                                        )
+                                                      : FadeInImage
+                                                          .assetNetwork(
+                                                          placeholder:
+                                                              'images/icon_user.png',
+                                                          image:memberImg.contains("http")?memberImg:"http://pmcapi.studyfield.com/" + memberImg,
+                                                          height: 120,
+                                                          width: 120,
+                                                          fit: BoxFit.fill,
+                                                        ),
                                                 ),
                                                 radius: 50.0,
                                               ),
