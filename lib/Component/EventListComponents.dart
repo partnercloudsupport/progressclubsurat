@@ -31,7 +31,7 @@ class _EventListComponentsState extends State<EventListComponents> {
             children: <Widget>[
               GestureDetector(
                 onTap: (){
-                  
+                  Navigator.pushNamed(context, "/")
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

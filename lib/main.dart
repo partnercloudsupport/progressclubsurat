@@ -105,7 +105,7 @@ class _MyAppState extends State<MyApp> {
         '/OtpVerification': (context) => OtpVerification(),
         '/FeedbackScreen': (context) => FeedbackScreen(),
         '/EventList': (context) => EventList(),
-        '/EventList': (context) => EventDetail(),
+        '/EventDetail': (context) => EventDetail(),
         '/AskList': (context) => AskList(),
         '/TaskList': (context) => TaskList(),
         '/MemberProfile': (context) => MemberProfile(),
