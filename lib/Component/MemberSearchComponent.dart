@@ -13,18 +13,16 @@ class MemberSearchComponent extends StatefulWidget {
   MemberSearchComponent(this.memberList);
 
   @override
-  _MemberSearchComponentState createState() =>
-      _MemberSearchComponentState();
+  _MemberSearchComponentState createState() => _MemberSearchComponentState();
 }
 
 class _MemberSearchComponentState extends State<MemberSearchComponent> {
-
-  saveAndNavigator() async{
+  saveAndNavigator() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(Session.memId,widget.memberList["Id"].toString());
-    if((widget.memberList['Type'].toString().toLowerCase()=="guest")){
+    await prefs.setString(Session.memId, widget.memberList["Id"].toString());
+    if ((widget.memberList['Type'].toString().toLowerCase() == "guest")) {
       Navigator.pushNamed(context, '/GuestDetails');
-    }else{
+    } else {
       Navigator.pushNamed(context, '/MemberDetails');
     }
   }
@@ -42,8 +40,6 @@ class _MemberSearchComponentState extends State<MemberSearchComponent> {
     return GestureDetector(
       onTap: () {
         saveAndNavigator();
-        /*Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MemberDetails()));*/
       },
       child: Container(
         padding: EdgeInsets.only(left: 8, right: 8),
@@ -62,39 +58,42 @@ class _MemberSearchComponentState extends State<MemberSearchComponent> {
                 Row(
                   children: <Widget>[
                     ClipOval(
-                      child: widget.memberList["Image"] != null
+                      child: widget.memberList["Image"] != null &&
+                              widget.memberList["Image"] != ""
                           ? FadeInImage.assetNetwork(
-                        placeholder: 'images/icon_user.png',
-                        image: "http://pmc.studyfield.com/" +
-                            widget.memberList["Image"],
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      )
+                              placeholder: 'images/icon_user.png',
+                              image: widget.memberList["Image"].toString().contains("http")
+                                  ? widget.memberList["Image"].toString()
+                                  : "http://pmc.studyfield.com/" +
+                                      widget.memberList["Image"],
+                              height: 50,
+                              width: 50,
+                              fit: BoxFit.cover,
+                            )
                           : Image.asset(
-                        'images/icon_user.png',
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      ),
+                              'images/icon_user.png',
+                              height: 50,
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                     Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                '${widget.memberList["PersonName"]}',
-                                style: TextStyle(
-                                    color: cnst.appPrimaryMaterialColor,
-                                    fontSize: 18),
-                              ),
-                              Text('${widget.memberList["CompanyName"]}'),
-                            ],
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            '${widget.memberList["PersonName"]}',
+                            style: TextStyle(
+                                color: cnst.appPrimaryMaterialColor,
+                                fontSize: 18),
                           ),
-                        )),
+                          Text('${widget.memberList["CompanyName"]}'),
+                        ],
+                      ),
+                    )),
                     GestureDetector(
                       onTap: () {
                         _openWhatsapp();
@@ -103,7 +102,7 @@ class _MemberSearchComponentState extends State<MemberSearchComponent> {
                         'images/whatsapp.png',
                         height: 40,
                         width: 40,
-                      ) ,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -111,8 +110,9 @@ class _MemberSearchComponentState extends State<MemberSearchComponent> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.call,size: 25,color: cnst.appPrimaryMaterialColor),
-                      ) ,
+                        child: Icon(Icons.call,
+                            size: 25, color: cnst.appPrimaryMaterialColor),
+                      ),
                     ),
                   ],
                 )

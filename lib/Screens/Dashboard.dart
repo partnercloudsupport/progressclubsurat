@@ -118,6 +118,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     prefs.remove(cnst.Session.memId);
     prefs.remove(cnst.Session.Photo);
     prefs.remove(cnst.Session.CompanyName);
+    prefs.remove(cnst.Session.memId);
 
     Navigator.pushReplacementNamed(context, "/Login");
   }
@@ -541,12 +542,6 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     }
   }
 
-  String setdata() {
-    getLocalData();
-    //densih ubhal
-    return memberName;
-  }
-
   saveAndNavigator() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(Session.memId, memberId);
@@ -620,6 +615,21 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     }
   }
 
+  getLocalDataFrom() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      memberName = prefs.getString(Session.Name);
+      memberCmpName = prefs.getString(Session.CompanyName);
+      memberPhoto = prefs.getString(Session.Photo);
+      //print(memberName);
+    });
+  }
+
+  String getName() {
+    getLocalDataFrom();
+    return memberName;
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -628,13 +638,13 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         title: Container(
           //color: Colors.white,
           width: MediaQuery.of(context).size.width,
-          child: Row(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  saveAndNavigator();
-                },
-                child: AvatarGlow(
+          child: GestureDetector(
+            onTap: (){
+              saveAndNavigator();
+            },
+            child: Row(
+              children: <Widget>[
+                AvatarGlow(
                   glowColor: Colors.white,
                   endRadius: 27.0,
                   duration: Duration(milliseconds: 2000),
@@ -646,20 +656,14 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                     shape: CircleBorder(),
                     child: CircleAvatar(
                       backgroundColor: Colors.grey[100],
-                      child:
-                          /*ClipOval(
-                          child: Image.network(
-                        'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
-                        height: 100,
-                        width: 100,
-                        fit: BoxFit.cover,
-                      ))*/
-                          ClipOval(
+                      child: ClipOval(
                         child: memberPhoto != null
                             ? FadeInImage.assetNetwork(
                                 placeholder: 'images/icon_user.png',
-                                image:
-                                    "http://pmc.studyfield.com/" + memberPhoto,
+                                image: memberPhoto.contains("http")
+                                    ? memberPhoto
+                                    : "http://pmc.studyfield.com/" +
+                                        memberPhoto,
                                 height: 50,
                                 width: 50,
                                 fit: BoxFit.cover,
@@ -675,28 +679,28 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.only(left: 2),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Name",
-                      style: TextStyle(fontSize: 14),
-                      maxLines: 1,
-                    ),
-                    Text(
-                      '$memberCmpName',
-                      style: TextStyle(fontSize: 12),
-                      maxLines: 2,
-                    ),
-                  ],
-                ),
-              ))
-            ],
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.only(left: 2),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "${getName()}",
+                        style: TextStyle(fontSize: 14),
+                        maxLines: 1,
+                      ),
+                      Text(
+                        '$memberCmpName',
+                        style: TextStyle(fontSize: 12),
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
+                ))
+              ],
+            ),
           ),
         ),
         actions: <Widget>[
@@ -718,71 +722,71 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       drawer: new Drawer(
         child: memberType.toLowerCase() == "guest"
             ? ListView(
-          children: <Widget>[
-            new ListTile(
-                leading: Icon(Icons.directions,
-                    color: cnst.appPrimaryMaterialColor),
-                title: new Text("Member Directory"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/Directory');
-                }),
-            Divider(
-              height: 2,
-              color: Colors.black,
-            ),
-            new ListTile(
-                leading: Icon(Icons.assignment,
-                    color: cnst.appPrimaryMaterialColor),
-                title: new Text("Event"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/EventList');
-                  //Navigator.pushReplacementNamed(context, '/EventList');
-                }),
-            Divider(
-              height: 2,
-              color: Colors.black,
-            ),
-            new ListTile(
-                leading: Icon(Icons.notifications,
-                    color: cnst.appPrimaryMaterialColor),
-                title: new Text("Notification"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(
-                      context, '/NotificationScreen');
-                }),
-            Divider(
-              height: 2,
-              color: Colors.black,
-            ),
-            new ListTile(
-                leading: Icon(Icons.feedback,
-                    color: cnst.appPrimaryMaterialColor),
-                title: new Text("Feedback"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/FeedbackScreen');
-                }),
-            Divider(
-              height: 2,
-              color: Colors.black,
-            ),
-            new ListTile(
-                leading: Icon(Icons.exit_to_app,
-                    color: cnst.appPrimaryMaterialColor),
-                title: new Text("Logout"),
-                onTap: () {
-                  Navigator.pop(context);
-                  _logout();
-                }),
-            Divider(
-              height: 2,
-              color: Colors.black,
-            ),
-          ],
-        )
+                children: <Widget>[
+                  new ListTile(
+                      leading: Icon(Icons.directions,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Member Directory"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/Directory');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.assignment,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Event"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/EventList');
+                        //Navigator.pushReplacementNamed(context, '/EventList');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.notifications,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Notification"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                            context, '/NotificationScreen');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.feedback,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Feedback"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/FeedbackScreen');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.exit_to_app,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Logout"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _logout();
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                ],
+              )
             : ListView(
                 children: <Widget>[
                   new ListTile(
@@ -1040,8 +1044,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       print(first);
       print(last);
 
-      getDashboardData(chapterId == "null" ? "0" : chapterId, first.toString().substring(0, 10),
-          last.toString().substring(0, 10));
+      getDashboardData(chapterId == "null" ? "0" : chapterId,
+          first.toString().substring(0, 10), last.toString().substring(0, 10));
 
       _visibleEvents = Map.fromEntries(
         _events.entries.where(

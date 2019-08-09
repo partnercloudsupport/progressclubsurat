@@ -67,11 +67,10 @@ class _MemberDirectoryComponentState extends State<MemberDirectoryComponent> {
                 Row(
                   children: <Widget>[
                     ClipOval(
-                      child: widget.memberList["Image"] != null
+                      child: widget.memberList["Image"] != null && widget.memberList["Image"] != ""
                           ? FadeInImage.assetNetwork(
                               placeholder: 'images/icon_user.png',
-                              image: "http://pmc.studyfield.com/" +
-                                  widget.memberList["Image"],
+                              image:widget.memberList["Image"].toString().contains("http")?widget.memberList["Image"]:"http://pmc.studyfield.com/" + widget.memberList["Image"],
                               height: 50,
                               width: 50,
                               fit: BoxFit.cover,

@@ -81,7 +81,7 @@ class _GuestDetailsState extends State<GuestDetails> {
   getMemberDetailsFromServer() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(Session.MemberId);
+      String MemberId = prefs.getString(Session.memId);
       //String type = prefs.getString(Session.memType);
 
       //check Internet Connection
@@ -141,7 +141,7 @@ class _GuestDetailsState extends State<GuestDetails> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          'Guest Profile',
+          'Guest Detail',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         leading: GestureDetector(
@@ -186,8 +186,19 @@ class _GuestDetailsState extends State<GuestDetails> {
                                       child: CircleAvatar(
                                         backgroundColor: Colors.grey[100],
                                         child: ClipOval(
-                                          child: Image.network(
-                                            'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
+                                          child: memberImg == "" &&
+                                              memberImg == "null"
+                                              ? Image.asset(
+                                            'images/icon_user.png',
+                                            height: 120,
+                                            width: 120,
+                                            fit: BoxFit.fill,
+                                          )
+                                              : FadeInImage
+                                              .assetNetwork(
+                                            placeholder:
+                                            'images/icon_user.png',
+                                            image:memberImg.contains("http")?memberImg:"http://pmcapi.studyfield.com/" + memberImg,
                                             height: 120,
                                             width: 120,
                                             fit: BoxFit.fill,

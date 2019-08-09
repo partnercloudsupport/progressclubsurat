@@ -62,7 +62,8 @@ class _CommitiesComponentsState extends State<CommitiesComponents> {
       columnContent.add(GestureDetector(
         onTap: () {
           print('${list[i]["MemberName"]}');
-          saveAndNavigator(list[i]["Id"].toString(), list[i]["Type"]);
+          saveAndNavigator(list[i]["Id"].toString(),
+              list[i]["Type"].toString().toLowerCase());
           //Navigator.pushNamed(context, '/CommitieScreen');
         },
         child: new ListTile(
@@ -71,11 +72,12 @@ class _CommitiesComponentsState extends State<CommitiesComponents> {
             Row(
               children: <Widget>[
                 ClipOval(
-                  child: list[i]["Image"] != null
+                  child: list[i]["Image"] != null && list[i]["Image"] != ""
                       ? FadeInImage.assetNetwork(
                           placeholder: 'images/icon_user.png',
-                          image:
-                              "http://pmc.studyfield.com/" + list[i]["Image"],
+                          image: list[i]["Image"].toString().contains("http")
+                              ? list[i]["Image"].toString()
+                              : "http://pmc.studyfield.com/" + list[i]["Image"],
                           height: 50,
                           width: 50,
                           fit: BoxFit.cover,
