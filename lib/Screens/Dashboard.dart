@@ -523,7 +523,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
           if (data != null && data.length > 0) {
             setState(() {
               isLoading = false;
-              list = data;
+              //list = data;
             });
 
             for(int i=0;i<data.length;i++){
