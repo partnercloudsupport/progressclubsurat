@@ -60,6 +60,9 @@ class _DirectorySearchState extends State<DirectorySearch> {
         showMsg("Please Enter Any Value");
       //check Internet Connection
     } on SocketException catch (_) {
+      setState(() {
+        isLoading = false;
+      });
       showMsg("No Internet Connection.");
     }
   }

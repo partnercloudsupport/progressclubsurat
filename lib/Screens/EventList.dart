@@ -85,6 +85,9 @@ class _EventListState extends State<EventList> {
         showMsg("No Internet Connection.");
       }
     } on SocketException catch (_) {
+      setState(() {
+        isLoading = false;
+      });
       showMsg("No Internet Connection.");
     }
   }

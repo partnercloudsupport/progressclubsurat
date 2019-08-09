@@ -82,6 +82,9 @@ class _DirectoryState extends State<Directory> {
         showMsg("No Internet Connection.");
       }
     } on SocketException catch (_) {
+      setState(() {
+        isLoading = false;
+      });
       showMsg("No Internet Connection.");
     }
   }

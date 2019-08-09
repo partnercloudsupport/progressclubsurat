@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
 import 'package:progressclubsurat/Common/Constants.dart';
 import 'package:progressclubsurat/Common/Services.dart';
+import 'package:progressclubsurat/Component/NoDataComponent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:progressclubsurat/Component/LoadinComponent.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
@@ -41,7 +42,7 @@ class _MemberDetailsState extends State<MemberDetails> {
   bool isPersonalLoading = false;
   bool isBusinessLoading = false;
   bool isMoreInfoLoading = false;
-  List list;
+  List list = new List();
   bool isEditable = false;
   bool isBusinessEditable = false;
   bool isMoreEditable = false;
@@ -59,7 +60,6 @@ class _MemberDetailsState extends State<MemberDetails> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-
           title: new Text("Error"),
           content: new Text(msg),
           actions: <Widget>[
@@ -396,286 +396,145 @@ class _MemberDetailsState extends State<MemberDetails> {
                 width: MediaQuery.of(context).size.width,
                 child: isLoading
                     ? LoadinComponent()
-                    : SingleChildScrollView(
-                        child: Stack(
-                          children: <Widget>[
-                            Column(
+                    : list.length > 0 && list != null
+                        ? SingleChildScrollView(
+                            child: Stack(
                               children: <Widget>[
-                                //Make Design
-                                Container(
-                                  margin: EdgeInsets.only(top: 10),
-                                  child: Column(
-                                    children: <Widget>[
-                                      AvatarGlow(
-                                        startDelay:
-                                        Duration(milliseconds: 1000),
-                                        glowColor:
-                                        cnst.appPrimaryMaterialColor,
-                                        endRadius: 80.0,
-                                        duration:
-                                        Duration(milliseconds: 2000),
-                                        repeat: true,
-                                        showTwoGlows: true,
-                                        repeatPauseDuration:
-                                        Duration(milliseconds: 100),
-                                        child: Material(
-                                          elevation: 8.0,
-                                          shape: CircleBorder(),
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                            Colors.grey[100],
-                                            child: ClipOval(
-                                              child: Image.network(
-                                                'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
-                                                height: 120,
-                                                width: 120,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                            radius: 50.0,
-                                          ),
-                                        ),
-                                      ),
-                                      Card(
-                                        margin: EdgeInsets.all(10),
-                                        elevation: 3,
-                                        child: Container(
-                                          //padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10,
-                                                right: 20,
-                                                bottom: 20),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Container(
-                                                  height: 50,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Row(
-                                                        children: <Widget>[
-                                                          Icon(
-                                                            Icons
-                                                                .account_circle,
-                                                            color: cnst
-                                                                .appPrimaryMaterialColor,
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 5),
-                                                            child: Text(
-                                                              'Personal Info',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontSize: 19,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
+                                Column(
+                                  children: <Widget>[
+                                    //Make Design
+                                    Container(
+                                      margin: EdgeInsets.only(top: 10),
+                                      child: Column(
+                                        children: <Widget>[
+                                          AvatarGlow(
+                                            startDelay:
+                                                Duration(milliseconds: 1000),
+                                            glowColor:
+                                                cnst.appPrimaryMaterialColor,
+                                            endRadius: 80.0,
+                                            duration:
+                                                Duration(milliseconds: 2000),
+                                            repeat: true,
+                                            showTwoGlows: true,
+                                            repeatPauseDuration:
+                                                Duration(milliseconds: 100),
+                                            child: Material(
+                                              elevation: 8.0,
+                                              shape: CircleBorder(),
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    Colors.grey[100],
+                                                child: ClipOval(
+                                                  child: Image.network(
+                                                    'https://upload.wikimedia.org/wikipedia/commons/9/9c/Hrithik_at_Rado_launch.jpg',
+                                                    height: 120,
+                                                    width: 120,
+                                                    fit: BoxFit.fill,
                                                   ),
                                                 ),
-                                                Divider(
-                                                  color: Colors.grey,
-                                                ),
-                                                TextFormField(
-                                                  controller: edtName,
-                                                  scrollPadding:
-                                                      EdgeInsets.all(0),
-                                                  decoration: InputDecoration(
-                                                      labelText: "Name:",
-                                                      labelStyle: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                      hintText: "Name"),
-                                                  enabled: isEditable,
-                                                  minLines: 1,
-                                                  maxLines: 4,
-                                                  keyboardType:
-                                                      TextInputType.multiline,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 15),
-                                                ),
-                                                Row(
-                                                  children: <Widget>[
-                                                    SizedBox(
-                                                      child: TextFormField(
-                                                        controller: edtDOB,
-                                                        scrollPadding:
-                                                            EdgeInsets.all(0),
-                                                        decoration: InputDecoration(
-                                                            labelText:
-                                                                "Birth Date:",
-                                                            labelStyle: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                            hintText:
-                                                                "Birth Date"),
-                                                        enabled: false,
-                                                        keyboardType:
-                                                            TextInputType.phone,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 15),
-                                                      ),
-                                                      //height: 40,
-                                                      width: (MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width -
-                                                          90),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 10),
-                                                    ),
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          if (isEditable) {
-                                                            DatePicker
-                                                                .showDatePicker(
-                                                              context,
-                                                              showTitleActions:
-                                                                  true,
-                                                              locale: 'en',
-                                                              minYear: 1970,
-                                                              maxYear: 2020,
-                                                              initialYear:
-                                                                  DateTime.now()
-                                                                      .year,
-                                                              initialMonth:
-                                                                  DateTime.now()
-                                                                      .month,
-                                                              initialDate:
-                                                                  DateTime.now()
-                                                                      .day,
-                                                              cancel: Text(
-                                                                  'cancel'),
-                                                              confirm: Text(
-                                                                  'confirm'),
-                                                              dateFormat:
-                                                                  'dd-mmm-yyyy',
-                                                              onChanged: (year,
-                                                                  month,
-                                                                  date) {},
-                                                              onConfirm: (year,
-                                                                  month, date) {
-                                                                edtDOB
-                                                                    .text = year
-                                                                        .toString() +
-                                                                    '-' +
-                                                                    month
-                                                                        .toString() +
-                                                                    '-' +
-                                                                    date.toString();
-                                                              },
-                                                            );
-                                                          }
-                                                        },
-                                                        child: Icon(Icons
-                                                            .calendar_today)),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 5),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
+                                                radius: 50.0,
+                                              ),
+                                            ),
+                                          ),
+                                          Card(
+                                            margin: EdgeInsets.all(10),
+                                            elevation: 3,
+                                            child: Container(
+                                              //padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10,
+                                                    right: 20,
+                                                    bottom: 20),
+                                                child: Column(
                                                   children: <Widget>[
                                                     Container(
-                                                      padding: EdgeInsets.only(
-                                                          right: 20),
-                                                      //color: Colors.black,
-                                                      width: (MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width /
-                                                              2) -
-                                                          30,
-                                                      child: Column(
+                                                      height: 50,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Row(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
-                                                                .start,
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
                                                         children: <Widget>[
-                                                          TextFormField(
-                                                            controller:
-                                                                edtGender,
-                                                            scrollPadding:
-                                                                EdgeInsets.all(
-                                                                    0),
-                                                            decoration: InputDecoration(
-                                                                labelText:
-                                                                    "Gender:",
-                                                                labelStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
-                                                                hintText:
-                                                                    "Gender"),
-                                                            enabled: isEditable,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .multiline,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 15),
+                                                          Row(
+                                                            children: <Widget>[
+                                                              Icon(
+                                                                Icons
+                                                                    .account_circle,
+                                                                color: cnst
+                                                                    .appPrimaryMaterialColor,
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            5),
+                                                                child: Text(
+                                                                  'Personal Info',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          19,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
                                                         ],
                                                       ),
                                                     ),
-                                                    Container(
-                                                      padding: EdgeInsets.only(
-                                                          left: 20),
-                                                      //color: Colors.black,
-                                                      width: (MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width /
-                                                              2) -
-                                                          25,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          TextFormField(
-                                                            controller: edtAge,
+                                                    Divider(
+                                                      color: Colors.grey,
+                                                    ),
+                                                    TextFormField(
+                                                      controller: edtName,
+                                                      scrollPadding:
+                                                          EdgeInsets.all(0),
+                                                      decoration: InputDecoration(
+                                                          labelText: "Name:",
+                                                          labelStyle: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                          hintText: "Name"),
+                                                      enabled: isEditable,
+                                                      minLines: 1,
+                                                      maxLines: 4,
+                                                      keyboardType:
+                                                          TextInputType
+                                                              .multiline,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 15),
+                                                    ),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        SizedBox(
+                                                          child: TextFormField(
+                                                            controller: edtDOB,
                                                             scrollPadding:
                                                                 EdgeInsets.all(
                                                                     0),
                                                             decoration: InputDecoration(
                                                                 labelText:
-                                                                    "Age:",
+                                                                    "Birth Date:",
                                                                 labelStyle: TextStyle(
                                                                     color: Colors
                                                                         .black,
@@ -685,8 +544,8 @@ class _MemberDetailsState extends State<MemberDetails> {
                                                                         FontWeight
                                                                             .w600),
                                                                 hintText:
-                                                                    "Age"),
-                                                            enabled: isEditable,
+                                                                    "Birth Date"),
+                                                            enabled: false,
                                                             keyboardType:
                                                                 TextInputType
                                                                     .phone,
@@ -695,141 +554,316 @@ class _MemberDetailsState extends State<MemberDetails> {
                                                                     .black,
                                                                 fontSize: 15),
                                                           ),
-                                                        ],
-                                                      ),
+                                                          //height: 40,
+                                                          width: (MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width -
+                                                              90),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 10),
+                                                        ),
+                                                        GestureDetector(
+                                                            onTap: () {
+                                                              if (isEditable) {
+                                                                DatePicker
+                                                                    .showDatePicker(
+                                                                  context,
+                                                                  showTitleActions:
+                                                                      true,
+                                                                  locale: 'en',
+                                                                  minYear: 1970,
+                                                                  maxYear: 2020,
+                                                                  initialYear:
+                                                                      DateTime.now()
+                                                                          .year,
+                                                                  initialMonth:
+                                                                      DateTime.now()
+                                                                          .month,
+                                                                  initialDate:
+                                                                      DateTime.now()
+                                                                          .day,
+                                                                  cancel: Text(
+                                                                      'cancel'),
+                                                                  confirm: Text(
+                                                                      'confirm'),
+                                                                  dateFormat:
+                                                                      'dd-mmm-yyyy',
+                                                                  onChanged: (year,
+                                                                      month,
+                                                                      date) {},
+                                                                  onConfirm:
+                                                                      (year,
+                                                                          month,
+                                                                          date) {
+                                                                    edtDOB
+                                                                        .text = year
+                                                                            .toString() +
+                                                                        '-' +
+                                                                        month
+                                                                            .toString() +
+                                                                        '-' +
+                                                                        date.toString();
+                                                                  },
+                                                                );
+                                                              }
+                                                            },
+                                                            child: Icon(Icons
+                                                                .calendar_today)),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 5),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: <Widget>[
-                                                    SizedBox(
-                                                      child: TextFormField(
-                                                        controller:
-                                                            edtAnniversary,
-                                                        scrollPadding:
-                                                            EdgeInsets.all(0),
-                                                        decoration: InputDecoration(
-                                                            labelText:
-                                                                "Anniversary:",
-                                                            labelStyle: TextStyle(
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 20),
+                                                          //color: Colors.black,
+                                                          width: (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  2) -
+                                                              30,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: <Widget>[
+                                                              TextFormField(
+                                                                controller:
+                                                                    edtGender,
+                                                                scrollPadding:
+                                                                    EdgeInsets
+                                                                        .all(0),
+                                                                decoration: InputDecoration(
+                                                                    labelText:
+                                                                        "Gender:",
+                                                                    labelStyle: TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600),
+                                                                    hintText:
+                                                                        "Gender"),
+                                                                enabled:
+                                                                    isEditable,
+                                                                keyboardType:
+                                                                    TextInputType
+                                                                        .multiline,
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        15),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 20),
+                                                          //color: Colors.black,
+                                                          width: (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  2) -
+                                                              25,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: <Widget>[
+                                                              TextFormField(
+                                                                controller:
+                                                                    edtAge,
+                                                                scrollPadding:
+                                                                    EdgeInsets
+                                                                        .all(0),
+                                                                decoration: InputDecoration(
+                                                                    labelText:
+                                                                        "Age:",
+                                                                    labelStyle: TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600),
+                                                                    hintText:
+                                                                        "Age"),
+                                                                enabled:
+                                                                    isEditable,
+                                                                keyboardType:
+                                                                    TextInputType
+                                                                        .phone,
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        15),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        SizedBox(
+                                                          child: TextFormField(
+                                                            controller:
+                                                                edtAnniversary,
+                                                            scrollPadding:
+                                                                EdgeInsets.all(
+                                                                    0),
+                                                            decoration: InputDecoration(
+                                                                labelText:
+                                                                    "Anniversary:",
+                                                                labelStyle: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                                hintText:
+                                                                    "Anniversary"),
+                                                            enabled: false,
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .phone,
+                                                            style: TextStyle(
                                                                 color: Colors
                                                                     .black,
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                            hintText:
-                                                                "Anniversary"),
-                                                        enabled: false,
-                                                        keyboardType:
-                                                            TextInputType.phone,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 15),
-                                                      ),
-                                                      //height: 40,
-                                                      width: (MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width -
-                                                          90),
+                                                                fontSize: 15),
+                                                          ),
+                                                          //height: 40,
+                                                          width: (MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width -
+                                                              90),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 10),
+                                                        ),
+                                                        GestureDetector(
+                                                            onTap: () {
+                                                              if (isEditable) {
+                                                                DatePicker
+                                                                    .showDatePicker(
+                                                                  context,
+                                                                  showTitleActions:
+                                                                      true,
+                                                                  locale: 'en',
+                                                                  minYear: 1970,
+                                                                  maxYear: 2020,
+                                                                  initialYear:
+                                                                      DateTime.now()
+                                                                          .year,
+                                                                  initialMonth:
+                                                                      DateTime.now()
+                                                                          .month,
+                                                                  initialDate:
+                                                                      DateTime.now()
+                                                                          .day,
+                                                                  cancel: Text(
+                                                                      'cancel'),
+                                                                  confirm: Text(
+                                                                      'confirm'),
+                                                                  dateFormat:
+                                                                      'dd-mmm-yyyy',
+                                                                  onChanged: (year,
+                                                                      month,
+                                                                      date) {},
+                                                                  onConfirm:
+                                                                      (year,
+                                                                          month,
+                                                                          date) {
+                                                                    edtAnniversary
+                                                                        .text = year
+                                                                            .toString() +
+                                                                        '-' +
+                                                                        month
+                                                                            .toString() +
+                                                                        '-' +
+                                                                        date.toString();
+                                                                  },
+                                                                );
+                                                              }
+                                                            },
+                                                            child: Icon(Icons
+                                                                .calendar_today)),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 5),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 10),
-                                                    ),
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          if (isEditable) {
-                                                            DatePicker
-                                                                .showDatePicker(
-                                                              context,
-                                                              showTitleActions:
-                                                                  true,
-                                                              locale: 'en',
-                                                              minYear: 1970,
-                                                              maxYear: 2020,
-                                                              initialYear:
-                                                                  DateTime.now()
-                                                                      .year,
-                                                              initialMonth:
-                                                                  DateTime.now()
-                                                                      .month,
-                                                              initialDate:
-                                                                  DateTime.now()
-                                                                      .day,
-                                                              cancel: Text(
-                                                                  'cancel'),
-                                                              confirm: Text(
-                                                                  'confirm'),
-                                                              dateFormat:
-                                                                  'dd-mmm-yyyy',
-                                                              onChanged: (year,
-                                                                  month,
-                                                                  date) {},
-                                                              onConfirm: (year,
-                                                                  month, date) {
-                                                                edtAnniversary
-                                                                    .text = year
-                                                                        .toString() +
-                                                                    '-' +
-                                                                    month
-                                                                        .toString() +
-                                                                    '-' +
-                                                                    date.toString();
-                                                              },
-                                                            );
-                                                          }
-                                                        },
-                                                        child: Icon(Icons
-                                                            .calendar_today)),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 5),
+                                                    TextFormField(
+                                                      controller: edtAddress,
+                                                      scrollPadding:
+                                                          EdgeInsets.all(0),
+                                                      decoration: InputDecoration(
+                                                          labelText: "Address",
+                                                          labelStyle: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                          hintText: "Address"),
+                                                      enabled: isEditable,
+                                                      minLines: 1,
+                                                      maxLines: 4,
+                                                      keyboardType:
+                                                          TextInputType
+                                                              .multiline,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 15),
                                                     ),
                                                   ],
                                                 ),
-                                                TextFormField(
-                                                  controller: edtAddress,
-                                                  scrollPadding:
-                                                      EdgeInsets.all(0),
-                                                  decoration: InputDecoration(
-                                                      labelText: "Address",
-                                                      labelStyle: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                      hintText: "Address"),
-                                                  enabled: isEditable,
-                                                  minLines: 1,
-                                                  maxLines: 4,
-                                                  keyboardType:
-                                                      TextInputType.multiline,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 15),
-                                                ),
-                                              ],
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
+                                Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: isPersonalLoading
+                                      ? LoadinComponent()
+                                      : Container(),
+                                )
                               ],
                             ),
-                            Container(
-                              height: MediaQuery.of(context).size.height,
-                              width: MediaQuery.of(context).size.width,
-                              child: isPersonalLoading
-                                  ? LoadinComponent()
-                                  : Container(),
-                            )
-                          ],
-                        ),
-                      ),
+                          )
+                        : NoDataComponent(),
               ),
               Container(
                 height: MediaQuery.of(context).size.height,
