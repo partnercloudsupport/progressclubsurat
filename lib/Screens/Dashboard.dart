@@ -65,7 +65,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   //loading var
   bool isLoading = false;
 
-  String memberName = "", memberCmpName = "", memberPhoto = "", memberId = "",memberType = "";
+  String memberName = "", memberCmpName = "", memberPhoto = "", memberId = "",memberType = "",chapterId="";
   int soundId;
   int _currentIndex = 0;
   Soundpool pool = Soundpool(streamType: StreamType.notification);
@@ -78,17 +78,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     //_selectedDay = DateTime.now();
-    var now = new DateTime.now();
-
-    var lastDayDateTime = (now.month < 12)
-        ? new DateTime(now.year, now.month + 1, 0)
-        : new DateTime(now.year + 1, 1, 0);
-
-    String sdate = "${lastDayDateTime.day}-${lastDayDateTime.month}-${lastDayDateTime.year}";
-    String edate = "01-${lastDayDateTime.month}-${lastDayDateTime.year}";
 
     getLocalData();
-    getDashboardData(sdate,edate);
 
     _firebaseMessaging.getToken().then((String token) {
       print("Original Token:$token");
@@ -130,12 +121,23 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       memberId = prefs.getString(Session.MemberId);
+      chapterId = prefs.getString(Session.ChapterId);
       memberName = prefs.getString(Session.Name);
       memberCmpName = prefs.getString(Session.CompanyName);
       memberPhoto = prefs.getString(Session.Photo);
       memberType = prefs.getString(Session.Type);
       //print(memberName);
     });
+
+    var now = new DateTime.now();
+    var lastDayDateTime = (now.month < 12)
+        ? new DateTime(now.year, now.month + 1, 0)
+        : new DateTime(now.year + 1, 1, 0);
+
+    String sdate = "${lastDayDateTime.day}-${lastDayDateTime.month}-${lastDayDateTime.year}";
+    String edate = "01-${lastDayDateTime.month}-${lastDayDateTime.year}";
+    getDashboardData(chapterId,sdate,edate);
+
   }
 
   final List<Widget> _children = [];
@@ -509,7 +511,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     }
   }
 
-  getDashboardData(String sdate,String edate) async {
+  getDashboardData(String chapterId,String sdate,String edate) async {
     try {
       //check Internet Connection
       final result = await InternetAddress.lookup('google.com');
@@ -517,7 +519,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         setState(() {
           isLoading = true;
         });
-        Future res = Services.GetDashboard(sdate, edate);
+        Future res = Services.GetDashboard(chapterId,sdate, edate);
         res.then((data) async {
           if (data != null && data.length > 0) {
             setState(() {
