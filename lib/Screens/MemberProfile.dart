@@ -240,6 +240,7 @@ class _MemberProfileState extends State<MemberProfile> {
           'CompanyName': edtCmpName.text,
           'BussinessAbout': edtBusinessAbout.text,
           'OfficeAddress': edtBusinessAddress.text,
+          'Keyword': edtkeywords.text,
         };
 
         Services.sendBusinessMemberDetails(data).then((data) async {
