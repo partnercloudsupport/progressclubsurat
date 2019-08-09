@@ -705,7 +705,7 @@ class Services {
 
 
   //upload member profile image
-  static Future<SaveDataClass> UploadMemberImage(body) async {
+  /*static Future<SaveDataClass> UploadMemberImage(body) async {
     print(body.toString());
     String url = API_URL + 'UpdateProfilePhoto';
     print("UpdateProfilePhoto url : " + url);
@@ -730,6 +730,35 @@ class Services {
       }
     } catch (e) {
       print("UpdateProfilePhoto ${e.toString()}");
+      throw Exception(e.toString());
+    }
+  }*/
+
+  static Future<SaveDataClass> UploadMemberImage(body) async {
+    print(body.toString());
+    String url = API_URL + 'UpdateProfilePhoto';
+    print("SaveOffer : " + url);
+    try {
+      final response = await dio.post(url, data: body);
+      if (response.statusCode == 200) {
+        SaveDataClass saveData =
+        new SaveDataClass(Message: 'No Data', IsSuccess: false, Data: '0');
+
+        print("SaveOffer Response: " + response.data.toString());
+        var memberDataClass = response.data;
+
+        saveData.Message = memberDataClass["Message"];
+        saveData.IsSuccess = memberDataClass["IsSuccess"];
+        saveData.IsRecord = memberDataClass["IsRecord"];
+        saveData.Data = memberDataClass["Data"].toString();
+
+        return saveData;
+      } else {
+        print("Error Kap1");
+        throw Exception(response.data.toString());
+      }
+    } catch (e) {
+      print("Error Kap ${e.toString()}");
       throw Exception(e.toString());
     }
   }

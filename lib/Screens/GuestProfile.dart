@@ -28,7 +28,8 @@ class _GuestProfileState extends State<GuestProfile> {
   TextEditingController edtName = new TextEditingController();
   TextEditingController edtEmail = new TextEditingController();
   TextEditingController edtCmpName = new TextEditingController();
-
+  int memberId=0;
+  String memberImg="";
   //profile editing
 
   File _imageOffer;
@@ -129,6 +130,8 @@ class _GuestProfileState extends State<GuestProfile> {
   setData(List list) async {
     setState(() {
       //personal Info
+      memberImg=list[0]["Image"];
+      memberId=list[0]["Id"];
       edtName.text = list[0]["Name"];
       edtEmail.text = list[0]["Email"];
       //Business Info
@@ -193,8 +196,8 @@ class _GuestProfileState extends State<GuestProfile> {
                                         child: CircleAvatar(
                                           backgroundColor: Colors.grey[100],
                                           child: ClipOval(
-                                            child: list[0]["Image"] == "" &&
-                                                    list[0]["Image"] == null
+                                            child: memberImg == "" &&
+                                                memberImg == null
                                                 ? Image.asset(
                                                     'images/icon_user.png',
                                                     height: 120,
@@ -206,9 +209,8 @@ class _GuestProfileState extends State<GuestProfile> {
                                                         placeholder:
                                                             'images/icon_user.png',
                                                         image:
-                                                            "http://pmc.studyfield.com/" +
-                                                                list[0]
-                                                                    ["Image"],
+                                                            "http://pmcapi.studyfield.com/" +
+                                                                memberImg,
                                                         height: 120,
                                                         width: 120,
                                                         fit: BoxFit.fill,
@@ -225,14 +227,19 @@ class _GuestProfileState extends State<GuestProfile> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                      margin:
-                                          EdgeInsets.only(left: 100, top: 100),
-                                      child: Image.asset(
-                                        'images/plus.png',
-                                        width: 25,
-                                        height: 25,
-                                      ))
+                                  GestureDetector(
+                                    onTap: (){
+                                      _profileImagePopup(context);
+                                    },
+                                    child: Container(
+                                        margin:
+                                            EdgeInsets.only(left: 100, top: 100),
+                                        child: Image.asset(
+                                          'images/plus.png',
+                                          width: 25,
+                                          height: 25,
+                                        )),
+                                  )
                                 ],
                               ),
                               Card(
@@ -427,7 +434,7 @@ class _GuestProfileState extends State<GuestProfile> {
 
         FormData formData = new FormData.from(
           {
-            "Id": list[0]["Id"].toString(),
+            "Id": memberId,
             "Image": _imageOffer != null
                 ? new UploadFileInfo(compressedFile, filename.toString())
                 : null
