@@ -114,6 +114,11 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(cnst.Session.MemberId);
+    prefs.remove(cnst.Session.ChapterId);
+    prefs.remove(cnst.Session.memId);
+    prefs.remove(cnst.Session.Photo);
+    prefs.remove(cnst.Session.CompanyName);
+
     Navigator.pushReplacementNamed(context, "/Login");
   }
 
@@ -162,7 +167,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     String sdate = "${lastDayDateTime.year}-${lastDayDateTime.month}-01";
     String edate =
         "${lastDayDateTime.year}-${lastDayDateTime.month}-${lastDayDateTime.day}";
-    getDashboardData(chapterId, sdate, edate);
+    getDashboardData(chapterId == "null" ? "0" : chapterId, sdate, edate);
   }
 
   final List<Widget> _children = [
@@ -187,7 +192,11 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MultipleEventList(date: selectedDate,chapterId: chapterId,memberId: memberId,),
+        builder: (context) => MultipleEventList(
+              date: selectedDate,
+              chapterId: chapterId,
+              memberId: memberId,
+            ),
       ),
     );
     /*if (events.length == 1) {
@@ -541,7 +550,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   saveAndNavigator() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(Session.memId, memberId);
-    if (memberType == "guest") {
+    if (memberType.toLowerCase() == "guest") {
       Navigator.pushNamed(context, '/GuestProfile');
     } else {
       Navigator.pushNamed(context, '/MemberProfile');
@@ -707,10 +716,12 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         ],
       ),
       drawer: new Drawer(
-        child: ListView(
+        child: memberType.toLowerCase() == "guest"
+            ? ListView(
           children: <Widget>[
             new ListTile(
-                leading: Icon(Icons.directions,color: cnst.appPrimaryMaterialColor),
+                leading: Icon(Icons.directions,
+                    color: cnst.appPrimaryMaterialColor),
                 title: new Text("Member Directory"),
                 onTap: () {
                   Navigator.pop(context);
@@ -721,19 +732,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.file_download,color: cnst.appPrimaryMaterialColor),
-                title: new Text("Download"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/Download');
-                  //Navigator.pushReplacementNamed(context, '/Download');
-                }),
-            Divider(
-              height: 2,
-              color: Colors.black,
-            ),
-            new ListTile(
-                leading: Icon(Icons.assignment,color: cnst.appPrimaryMaterialColor),
+                leading: Icon(Icons.assignment,
+                    color: cnst.appPrimaryMaterialColor),
                 title: new Text("Event"),
                 onTap: () {
                   Navigator.pop(context);
@@ -745,35 +745,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.assignment,color: cnst.appPrimaryMaterialColor),
-                title: new Text("Assignments"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/Assignments');
-                  //Navigator.pushReplacementNamed(context, '/Assignments');
-                }),
-            Divider(
-              height: 2,
-              color: Colors.black,
-            ),
-            new ListTile(
-                leading: Image.asset(
-                  'images/icon_ask.png',
-                  color: cnst.appPrimaryMaterialColor,
-                  height: 28,
-                  width: 28,
-                ),
-                title: new Text("Ask"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/AskList');
-                }),
-            Divider(
-              height: 2,
-              color: Colors.black,
-            ),
-            new ListTile(
-                leading: Icon(Icons.notifications,color: cnst.appPrimaryMaterialColor),
+                leading: Icon(Icons.notifications,
+                    color: cnst.appPrimaryMaterialColor),
                 title: new Text("Notification"),
                 onTap: () {
                   Navigator.pop(context);
@@ -785,7 +758,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.feedback,color: cnst.appPrimaryMaterialColor),
+                leading: Icon(Icons.feedback,
+                    color: cnst.appPrimaryMaterialColor),
                 title: new Text("Feedback"),
                 onTap: () {
                   Navigator.pop(context);
@@ -796,7 +770,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
             new ListTile(
-                leading: Icon(Icons.exit_to_app,color: cnst.appPrimaryMaterialColor),
+                leading: Icon(Icons.exit_to_app,
+                    color: cnst.appPrimaryMaterialColor),
                 title: new Text("Logout"),
                 onTap: () {
                   Navigator.pop(context);
@@ -807,7 +782,115 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               color: Colors.black,
             ),
           ],
-        ),
+        )
+            : ListView(
+                children: <Widget>[
+                  new ListTile(
+                      leading: Icon(Icons.directions,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Member Directory"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/Directory');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.file_download,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Download"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/Download');
+                        //Navigator.pushReplacementNamed(context, '/Download');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.assignment,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Event"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/EventList');
+                        //Navigator.pushReplacementNamed(context, '/EventList');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.assignment,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Assignments"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/Assignments');
+                        //Navigator.pushReplacementNamed(context, '/Assignments');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Image.asset(
+                        'images/icon_ask.png',
+                        color: cnst.appPrimaryMaterialColor,
+                        height: 28,
+                        width: 28,
+                      ),
+                      title: new Text("Ask"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/AskList');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.notifications,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Notification"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                            context, '/NotificationScreen');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.feedback,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Feedback"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/FeedbackScreen');
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  new ListTile(
+                      leading: Icon(Icons.exit_to_app,
+                          color: cnst.appPrimaryMaterialColor),
+                      title: new Text("Logout"),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _logout();
+                      }),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
       ),
       /*bottomNavigationBar: AnimatedBottomBar(
           barItems: widget.barItems,

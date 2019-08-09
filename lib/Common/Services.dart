@@ -269,7 +269,7 @@ class Services {
   //sign up guest
   static Future<SaveDataClass> guestSignUp(body) async {
     print(body.toString());
-    String url = API_URL + 'PostGuest';
+    String url = API_URL + 'SignUp';
     print("SaveMember url : " + url);
     try {
       final response = await dio.post(url, data: body);

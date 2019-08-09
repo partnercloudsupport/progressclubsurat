@@ -65,7 +65,7 @@ class _MultipleEventListState extends State<MultipleEventList> {
         setState(() {
           isLoading = true;
         });
-        Future res = Services.GetMeetingListByDate(widget.chapterId, widget.date);
+        Future res = Services.GetMeetingListByDate(widget.chapterId=="null"?"0":widget.chapterId, widget.date);
         res.then((data) async {
           if (data != null && data.length > 0) {
             setState(() {
