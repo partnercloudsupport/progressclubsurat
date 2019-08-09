@@ -102,6 +102,17 @@ class _DirectoryState extends State<Directory> {
           ),
         ),
         actionsIconTheme: IconThemeData.fallback(),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/DirectorySearch');
+              },
+              child: Icon(Icons.search,color: cnst.appPrimaryMaterialColor,size: 30),
+            ),
+          )
+        ],
         title: Text(
           'Directory',
           style: TextStyle(

@@ -126,6 +126,37 @@ class _PendingAssignmentComponentsState
     }
   }
 
+  void _showConfirmDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Progress Club"),
+          content: new Text("Are You Sure You Want To Submit Assignment"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                sendTaskFinish();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.list["IsCompleted"] == false
@@ -188,13 +219,15 @@ class _PendingAssignmentComponentsState
                                                 "Text") {
                                               if (edtName.text != "") {
                                                 //showMsg("Wow Me"); Done
-                                                sendTaskFinish();
+                                                _showConfirmDialog();
+                                                //sendTaskFinish();
                                               } else {
                                                 showMsg("Please Enter Text.");
                                               }
                                             } else {
                                               //showMsg("Wow");   Done
-                                              sendTaskFinish();
+                                              _showConfirmDialog();
+                                              //sendTaskFinish();
                                             }
                                           }
                                         },
