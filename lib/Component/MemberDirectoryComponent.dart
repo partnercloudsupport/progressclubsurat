@@ -3,6 +3,7 @@ import 'package:progressclubsurat/Common/Constants.dart' as cnst;
 import 'package:progressclubsurat/Common/Constants.dart';
 import 'package:progressclubsurat/Screens/MemberDetails.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MemberDirectoryComponent extends StatefulWidget {
   var memberList;
@@ -23,6 +24,15 @@ class _MemberDirectoryComponentState extends State<MemberDirectoryComponent> {
     await prefs.setString(Session.memId,widget.memberList["Id"].toString());
     Navigator.pushNamed(context, '/MemberDetails');
   }
+
+  _openWhatsapp() {
+    String whatsAppLink = cnst.whatsAppLink;
+    String urlwithmobile = whatsAppLink.replaceAll(
+        "#mobile", "91${widget.memberList["MobileNo"]}");
+    String urlwithmsg = urlwithmobile.replaceAll("#msg", "");
+    launch(urlwithmsg);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -80,7 +90,26 @@ class _MemberDirectoryComponentState extends State<MemberDirectoryComponent> {
                           Text('${widget.memberList["CompanyName"]}'),
                         ],
                       ),
-                    ))
+                    )),
+                    GestureDetector(
+                      onTap: () {
+                        _openWhatsapp();
+                      },
+                      child: Image.asset(
+                        'images/whatsapp.png',
+                        height: 40,
+                        width: 40,
+                      ) ,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        launch("tel:" + widget.memberList['MobileNo']);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.call,size: 25,color: cnst.appPrimaryMaterialColor),
+                      ) ,
+                    ),
                   ],
                 )
               ],
