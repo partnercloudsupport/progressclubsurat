@@ -8,12 +8,13 @@ import 'package:progressclubsurat/Common/Services.dart';
 
 //Componnets Dart File
 import 'package:progressclubsurat/Component/MultipleEventListComponents.dart';
+import 'package:progressclubsurat/Component/MultipleEventListMeetingComponents.dart';
 
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class MultipleEventList extends StatefulWidget {
-  final String date,chapterId;
-  const MultipleEventList({Key key, this.date,this.chapterId}) : super(key: key);
+  final String date,chapterId,memberId;
+  const MultipleEventList({Key key, this.date,this.chapterId,this.memberId}) : super(key: key);
 
   @override
   _MultipleEventListState createState() => _MultipleEventListState();
@@ -179,7 +180,7 @@ class _MultipleEventListState extends State<MultipleEventList> {
                     child: Swiper(
                       itemHeight: 500,
                       itemBuilder: (BuildContext context, int index) {
-                        return MultipleEventListComponents(listMeeting[index]);
+                        return MultipleEventListMeetingComponents(listMeeting[index],widget.memberId);
                       },
                       itemCount: listMeeting.length,
                       pagination: new SwiperPagination(),
@@ -191,7 +192,33 @@ class _MultipleEventListState extends State<MultipleEventList> {
                 ],
               ),
             ),
-            Container()
+            Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  //Make ListView
+                  Container(
+                    height: 500,
+                    margin: EdgeInsets.only(top: 10),
+                    //height: MediaQuery.of(context).size.height - 75,
+                    width: MediaQuery.of(context).size.width,
+                    child: Swiper(
+                      itemHeight: 500,
+                      itemBuilder: (BuildContext context, int index) {
+                        return MultipleEventListComponents(listEvent[index],widget.memberId);
+                      },
+                      itemCount: listEvent.length,
+                      pagination: new SwiperPagination(),
+                      //control: new SwiperControl(),
+                      viewportFraction: 0.85,
+                      scale: 0.9,
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

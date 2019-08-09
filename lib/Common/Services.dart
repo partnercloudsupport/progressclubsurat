@@ -874,4 +874,62 @@ class Services {
       throw Exception(MESSAGES.INTERNET_ERROR);
     }
   }
+
+  static Future<SaveDataClass> AddEventConformation(body) async {
+    print(body.toString());
+    String url = API_URL + 'AddEventConformation';
+    print("AddEventConformation url : " + url);
+    try {
+      final response = await dio.post(url, data: body);
+      if (response.statusCode == 200) {
+        SaveDataClass saveData =
+        new SaveDataClass(Message: 'No Data', IsSuccess: false,IsRecord: false, Data: null);
+
+        print("AddEventConformation Response: " + response.data.toString());
+        var memberDataClass = response.data;
+
+        saveData.Message = memberDataClass["Message"];
+        saveData.IsSuccess = memberDataClass["IsSuccess"];
+        saveData.IsRecord = memberDataClass["IsRecord"];
+        saveData.Data = memberDataClass["Data"].toString();
+
+        return saveData;
+      } else {
+        print("Error AddEventConformation");
+        throw Exception(response.data.toString());
+      }
+    } catch (e) {
+      print("Error AddEventConformation ${e.toString()}");
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future<SaveDataClass> AddMeetingConformation(body) async {
+    print(body.toString());
+    String url = API_URL + 'AddMeetingConformation';
+    print("AddMeetingConformation url : " + url);
+    try {
+      final response = await dio.post(url, data: body);
+      if (response.statusCode == 200) {
+        SaveDataClass saveData =
+        new SaveDataClass(Message: 'No Data', IsSuccess: false,IsRecord: false, Data: null);
+
+        print("AddMeetingConformation Response: " + response.data.toString());
+        var memberDataClass = response.data;
+
+        saveData.Message = memberDataClass["Message"];
+        saveData.IsSuccess = memberDataClass["IsSuccess"];
+        saveData.IsRecord = memberDataClass["IsRecord"];
+        saveData.Data = memberDataClass["Data"].toString();
+
+        return saveData;
+      } else {
+        print("Error AddMeetingConformation");
+        throw Exception(response.data.toString());
+      }
+    } catch (e) {
+      print("Error AddMeetingConformation ${e.toString()}");
+      throw Exception(e.toString());
+    }
+  }
 }

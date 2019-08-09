@@ -187,7 +187,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MultipleEventList(date: selectedDate,chapterId: chapterId),
+        builder: (context) => MultipleEventList(date: selectedDate,chapterId: chapterId,memberId: memberId,),
       ),
     );
     /*if (events.length == 1) {

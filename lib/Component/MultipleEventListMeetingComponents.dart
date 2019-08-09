@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
 import 'package:progressclubsurat/Common/Services.dart';
 
-class MultipleEventListComponents extends StatefulWidget {
+class MultipleEventListMeetingComponents extends StatefulWidget {
   var data;
   String memberId;
-  MultipleEventListComponents(this.data,this.memberId);
+  MultipleEventListMeetingComponents(this.data,this.memberId);
 
   @override
-  _MultipleEventListComponentsState createState() =>
-      _MultipleEventListComponentsState();
+  _MultipleEventListMeetingComponentsState createState() =>
+      _MultipleEventListMeetingComponentsState();
 }
 
-class _MultipleEventListComponentsState
-    extends State<MultipleEventListComponents> {
+class _MultipleEventListMeetingComponentsState
+    extends State<MultipleEventListMeetingComponents> {
 
   bool isLoading = false;
   showMsg(String title,String msg) {
@@ -41,7 +41,8 @@ class _MultipleEventListComponentsState
     );
   }
 
-  RegisterForEvent() async{
+  RegisterForMeeting() async{
+    print('Call');
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -52,10 +53,10 @@ class _MultipleEventListComponentsState
         var data = {
           'Id': 0,
           'MemberId': widget.memberId,
-          'EventId': widget.data["Id"],
+          'MeetingId': widget.data["Id"],
           'Date': DateTime.now().toString().substring(0,10),
         };
-        Services.AddEventConformation(data).then((data) async {
+        Services.AddMeetingConformation(data).then((data) async {
           setState(() {
             isLoading = false;
           });
@@ -97,7 +98,7 @@ class _MultipleEventListComponentsState
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "${widget.data["EventName"]}",
+                "${widget.data["Title"]}",
                 style: TextStyle(
                     color: cnst.appPrimaryMaterialColor,
                     fontSize: 18,
@@ -107,7 +108,14 @@ class _MultipleEventListComponentsState
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Text('${widget.data["LongDesc"]}',
+            child: Text(
+              '${widget.data["ChapterName"]}',
+              style: TextStyle(color: Colors.black, fontSize: 15),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text('${widget.data["ShortDescription"]}',
               style: TextStyle(color: Colors.grey[600], fontSize: 13),
             ),
           ),
@@ -134,20 +142,82 @@ class _MultipleEventListComponentsState
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Date :',
+                        'From :',
                         style: TextStyle(
                             color: cnst.appPrimaryMaterialColor,
                             fontSize: 13,
                             fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        ' ${widget.data["EventDate"].toString().substring(0,10)}',
+                        ' ${widget.data["Start_Date"].toString().substring(0,10)}',
                         style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                       )
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'To :',
+                        style: TextStyle(
+                            color: cnst.appPrimaryMaterialColor,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        ' ${widget.data["End_Date"].toString().substring(0,10)}',
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Start At ${widget.data["Time"]}',
+                        style: TextStyle(
+                            color: cnst.appPrimaryMaterialColor,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text(
+              'Venue At :',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: cnst.appPrimaryMaterialColor,
+                  fontSize: 14),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              '${widget.data["Venue"]}',
+              style: TextStyle(color: Colors.grey[600], fontSize: 13),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              'Registration Charges : ${cnst.Inr_Rupee} ${widget.data["Charges"]}/-',
+              style: TextStyle(
+                  color: cnst.appPrimaryMaterialColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600),
             ),
           ),
           Padding(
@@ -169,7 +239,7 @@ class _MultipleEventListComponentsState
                         color: cnst.appPrimaryMaterialColor,
                         minWidth: MediaQuery.of(context).size.width - 10,
                         onPressed: () {
-                          RegisterForEvent();
+                          RegisterForMeeting();
                         },
                         child: setUpButtonChild(),
                       ),
