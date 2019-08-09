@@ -59,6 +59,7 @@ class _MemberDetailsState extends State<MemberDetails> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
+
           title: new Text("Error"),
           content: new Text(msg),
           actions: <Widget>[
