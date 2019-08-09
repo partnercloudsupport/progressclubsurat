@@ -147,7 +147,7 @@ class _MemberDetailsState extends State<MemberDetails> {
   setData(List list) async {
     setState(() {
       //personal Info
-      memberImg = list[0]["Image"];
+      memberImg = list[0]["Image"].toString();
       memberId = list[0]["Id"];
       edtName.text = list[0]["Name"];
       edtDOB.text =

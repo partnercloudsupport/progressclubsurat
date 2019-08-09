@@ -1040,7 +1040,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       print(first);
       print(last);
 
-      getDashboardData(chapterId, first.toString().substring(0, 10),
+      getDashboardData(chapterId == "null" ? "0" : chapterId, first.toString().substring(0, 10),
           last.toString().substring(0, 10));
 
       _visibleEvents = Map.fromEntries(

@@ -25,6 +25,8 @@ class _GuestDetailsState extends State<GuestDetails> {
   TextEditingController edtName = new TextEditingController();
   TextEditingController edtEmail = new TextEditingController();
   TextEditingController edtCmpName = new TextEditingController();
+  int memberId = 0;
+  String memberImg = "";
 
   @override
   void initState() {
@@ -122,6 +124,9 @@ class _GuestDetailsState extends State<GuestDetails> {
   setData(List list) async {
     setState(() {
       //personal Info
+      memberImg = list[0]["Image"].toString();
+      memberId = list[0]["Id"];
+
       edtName.text = list[0]["Name"];
       edtEmail.text = list[0]["Email"];
       //Business Info
