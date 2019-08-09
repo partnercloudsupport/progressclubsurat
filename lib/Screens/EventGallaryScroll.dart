@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class EventGallaryScroll extends StatefulWidget {
   @override
@@ -10,7 +11,6 @@ class _EventGallaryScrollState extends State<EventGallaryScroll> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.90),
-      body: Center(child: Text("Chirag")),
     );
   }
 }

@@ -36,13 +36,13 @@ class _GalleryComponentsState extends State<GalleryComponents> {
               fit: BoxFit.fill,
             )*/
                 GestureDetector(
-                  onTap: (){
+                  /*onTap: (){
                     print("ddd");
                     Navigator.of(context).push(PageRouteBuilder(
                         opaque: false,
                         pageBuilder: (BuildContext context, _, __) =>
                             EventGallaryScroll()));
-                  },
+                  },*/
                   child: widget.eventGallery["EventPhoto1"] != null
                       ? FadeInImage.assetNetwork(
                           placeholder: 'images/icon_events.jpg',
