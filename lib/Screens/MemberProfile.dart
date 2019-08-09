@@ -39,6 +39,7 @@ class _MemberProfileState extends State<MemberProfile> {
   //loading var
   bool isLoading = true;
   bool isPersonalLoading = false;
+  bool isBusinessLoading = false;
   List list;
   bool isEditable = false;
   bool isBusinessEditable = false;
@@ -58,6 +59,27 @@ class _MemberProfileState extends State<MemberProfile> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Error"),
+          content: new Text(msg),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  showHHMsg(String msg) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
           content: new Text(msg),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
@@ -171,12 +193,11 @@ class _MemberProfileState extends State<MemberProfile> {
           setState(() {
             isPersonalLoading = false;
           });
-          if (data.Data != "0" && data!="") {
+          if (data.Data != "0" && data != "") {
             //signUpDone("Assignment Task Update Successfully.");
             await prefs.setString(Session.Name, edtName.text);
             await prefs.setString(Session.CompanyName, edtCmpName.text);
-            showMsg(data.Message);
-
+            showHHMsg("Data Updated Successfully");
           } else {
             setState(() {
               isPersonalLoading = false;
@@ -191,6 +212,58 @@ class _MemberProfileState extends State<MemberProfile> {
       } else {
         setState(() {
           isPersonalLoading = false;
+        });
+        showMsg("No Internet Connection.");
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }
+
+  //send Business Info to server
+  sendBusinessInfo() async {
+    try {
+      //check Internet Connection
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isBusinessLoading = true;
+        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        String memberId = prefs.getString(Session.MemberId);
+        var now = new DateTime.now();
+
+        var data = {
+          'Id': memberId,
+          'CompanyName': edtCmpName.text,
+          'BussinessAbout': edtBusinessAbout.text,
+          'OfficeAddress': edtBusinessAddress.text,
+        };
+
+        Services.sendBusinessMemberDetails(data).then((data) async {
+          setState(() {
+            isBusinessLoading = false;
+          });
+          if (data.Data != "0" && data != "") {
+            //signUpDone("Assignment Task Update Successfully.");
+            await prefs.setString(Session.Name, edtName.text);
+            await prefs.setString(Session.CompanyName, edtCmpName.text);
+            showHHMsg("Data Updated Successfully");
+          } else {
+            setState(() {
+              isBusinessLoading = false;
+            });
+          }
+        }, onError: (e) {
+          setState(() {
+            isBusinessLoading = false;
+          });
+          showMsg("Try Again.");
+        });
+      } else {
+        setState(() {
+          isBusinessLoading = false;
         });
         showMsg("No Internet Connection.");
       }
@@ -814,7 +887,7 @@ class _MemberProfileState extends State<MemberProfile> {
                                                             enabled: isEditable,
                                                             keyboardType:
                                                                 TextInputType
-                                                                    .phone,
+                                                                    .multiline,
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -856,7 +929,7 @@ class _MemberProfileState extends State<MemberProfile> {
                                                                             .w600),
                                                                 hintText:
                                                                     "Age"),
-                                                            enabled: false,
+                                                            enabled: isEditable,
                                                             keyboardType:
                                                                 TextInputType
                                                                     .phone,
@@ -1007,192 +1080,203 @@ class _MemberProfileState extends State<MemberProfile> {
                 child: isLoading
                     ? LoadinComponent()
                     : SingleChildScrollView(
-                        child: Column(
+                        child: Stack(
                           children: <Widget>[
-                            //Make Design
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              child: Column(
-                                children: <Widget>[
-                                  Card(
-                                    margin: EdgeInsets.all(10),
-                                    elevation: 3,
-                                    child: Container(
-                                      //padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, right: 20, bottom: 20),
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              height: 50,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Row(
+                            Column(
+                              children: <Widget>[
+                                //Make Design
+                                Container(
+                                  margin: EdgeInsets.only(top: 10),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Card(
+                                        margin: EdgeInsets.all(10),
+                                        elevation: 3,
+                                        child: Container(
+                                          //padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, right: 20, bottom: 20),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Container(
+                                                  height: 50,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: <Widget>[
-                                                      Icon(
-                                                        Icons.business,
-                                                        color: cnst
-                                                            .appPrimaryMaterialColor,
+                                                      Row(
+                                                        children: <Widget>[
+                                                          Icon(
+                                                            Icons.business,
+                                                            color: cnst
+                                                                .appPrimaryMaterialColor,
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(left: 5),
+                                                            child: Text(
+                                                              'Business Info',
+                                                              textAlign:
+                                                                  TextAlign.center,
+                                                              style: TextStyle(
+                                                                  fontSize: 19,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color:
+                                                                      Colors.black),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 5),
-                                                        child: Text(
-                                                          'Business Info',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              fontSize: 19,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color:
-                                                                  Colors.black),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            if (isBusinessEditable) {
+                                                              isBusinessEditable = !isBusinessEditable;
+                                                              sendBusinessInfo();
+                                                            } else {
+                                                              isBusinessEditable =
+                                                                  true;
+                                                            }
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          children: <Widget>[
+                                                            Icon(
+                                                              Icons.edit,
+                                                              size: 20,
+                                                              color: cnst
+                                                                  .appPrimaryMaterialColor,
+                                                            ),
+                                                            Text(
+                                                              isBusinessEditable
+                                                                  ? "Update"
+                                                                  : 'Edit',
+                                                              textAlign:
+                                                                  TextAlign.center,
+                                                              style: TextStyle(
+                                                                  fontSize: 17,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color:
+                                                                      Colors.black),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
+                                                      )
                                                     ],
                                                   ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        if (isBusinessEditable) {
-                                                          isBusinessEditable =
-                                                              !isBusinessEditable;
-                                                        } else {
-                                                          isBusinessEditable =
-                                                              true;
-                                                        }
-                                                      });
-                                                    },
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Icon(
-                                                          Icons.edit,
-                                                          size: 20,
-                                                          color: cnst
-                                                              .appPrimaryMaterialColor,
-                                                        ),
-                                                        Text(
-                                                          isBusinessEditable
-                                                              ? "Update"
-                                                              : 'Edit',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              fontSize: 17,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              color: Colors.grey,
-                                            ),
-                                            TextFormField(
-                                              controller: edtCmpName,
-                                              scrollPadding: EdgeInsets.all(0),
-                                              decoration: InputDecoration(
-                                                  labelText: "Company",
-                                                  labelStyle: TextStyle(
+                                                ),
+                                                Divider(
+                                                  color: Colors.grey,
+                                                ),
+                                                TextFormField(
+                                                  controller: edtCmpName,
+                                                  scrollPadding: EdgeInsets.all(0),
+                                                  decoration: InputDecoration(
+                                                      labelText: "Company",
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                      hintText: "Company"),
+                                                  enabled: isBusinessEditable,
+                                                  minLines: 1,
+                                                  maxLines: 4,
+                                                  keyboardType:
+                                                      TextInputType.multiline,
+                                                  style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                  hintText: "Company"),
-                                              enabled: isBusinessEditable,
-                                              minLines: 1,
-                                              maxLines: 4,
-                                              keyboardType:
-                                                  TextInputType.multiline,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
-                                            ),
-                                            TextFormField(
-                                              controller: edtBusinessAddress,
-                                              scrollPadding: EdgeInsets.all(0),
-                                              decoration: InputDecoration(
-                                                  labelText: "Address",
-                                                  labelStyle: TextStyle(
+                                                      fontSize: 15),
+                                                ),
+                                                TextFormField(
+                                                  controller: edtBusinessAddress,
+                                                  scrollPadding: EdgeInsets.all(0),
+                                                  decoration: InputDecoration(
+                                                      labelText: "Address",
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                      hintText: "Address"),
+                                                  enabled: isBusinessEditable,
+                                                  minLines: 1,
+                                                  maxLines: 4,
+                                                  keyboardType:
+                                                      TextInputType.multiline,
+                                                  style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                  hintText: "Address"),
-                                              enabled: isBusinessEditable,
-                                              minLines: 1,
-                                              maxLines: 4,
-                                              keyboardType:
-                                                  TextInputType.multiline,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
-                                            ),
-                                            TextFormField(
-                                              controller: edtBusinessAbout,
-                                              scrollPadding: EdgeInsets.all(0),
-                                              decoration: InputDecoration(
-                                                  labelText: "About Business",
-                                                  labelStyle: TextStyle(
+                                                      fontSize: 15),
+                                                ),
+                                                TextFormField(
+                                                  controller: edtBusinessAbout,
+                                                  scrollPadding: EdgeInsets.all(0),
+                                                  decoration: InputDecoration(
+                                                      labelText: "About Business",
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                      hintText: "About Business"),
+                                                  enabled: isBusinessEditable,
+                                                  minLines: 1,
+                                                  maxLines: 4,
+                                                  keyboardType:
+                                                      TextInputType.multiline,
+                                                  style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                  hintText: "About Business"),
-                                              enabled: isBusinessEditable,
-                                              minLines: 1,
-                                              maxLines: 4,
-                                              keyboardType:
-                                                  TextInputType.multiline,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
-                                            ),
-                                            TextFormField(
-                                              controller: edtkeywords,
-                                              scrollPadding: EdgeInsets.all(0),
-                                              decoration: InputDecoration(
-                                                  labelText: "Keywords",
-                                                  labelStyle: TextStyle(
+                                                      fontSize: 15),
+                                                ),
+                                                TextFormField(
+                                                  controller: edtkeywords,
+                                                  scrollPadding: EdgeInsets.all(0),
+                                                  decoration: InputDecoration(
+                                                      labelText: "Keywords",
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                      hintText: "Keywords"),
+                                                  enabled: isBusinessEditable,
+                                                  minLines: 1,
+                                                  maxLines: 6,
+                                                  keyboardType:
+                                                      TextInputType.multiline,
+                                                  style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                  hintText: "Keywords"),
-                                              enabled: isBusinessEditable,
-                                              minLines: 1,
-                                              maxLines: 6,
-                                              keyboardType:
-                                                  TextInputType.multiline,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
+                                                      fontSize: 15),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+                            Container(
+                              height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.width,
+                              child: isBusinessLoading
+                                  ? LoadinComponent()
+                                  : Container(),
+                            )
                           ],
                         ),
                       ),
