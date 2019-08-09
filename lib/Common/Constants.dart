@@ -5,6 +5,8 @@ const Inr_Rupee = "₹";
 const Color appcolor = Color.fromRGBO(0, 171, 199, 1);
 const Color secondaryColor = Color.fromRGBO(85, 96, 128, 1);
 
+const String whatsAppLink = "https://wa.me/#mobile?text=#msg"; //mobile no with country code
+
 Map<int, Color> appprimarycolors = {
   50: Color.fromRGBO(56, 48, 95, .1),
   100: Color.fromRGBO(56, 48, 95, .2),

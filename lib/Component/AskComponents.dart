@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:progressclubsurat/Common/Constants.dart' as cnst;
+import 'package:url_launcher/url_launcher.dart';
 
 class AskComponents extends StatefulWidget {
   var AskList;
@@ -12,6 +13,12 @@ class AskComponents extends StatefulWidget {
 }
 
 class _AskComponentsState extends State<AskComponents> {
+
+
+  SaveShare(String val) async {
+    launch(val);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -84,7 +91,8 @@ class _AskComponentsState extends State<AskComponents> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '${widget.AskList["FromDate"].substring(8,10)}-'"${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.AskList["FromDate"].substring(0,10)).toString()))}-${widget.AskList["FromDate"].substring(0,4)}",
+                              '${widget.AskList["FromDate"].substring(8, 10)}-'
+                              "${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.AskList["FromDate"].substring(0, 10)).toString()))}-${widget.AskList["FromDate"].substring(0, 4)}",
                               style: TextStyle(
                                   color: cnst.appPrimaryMaterialColor,
                                   fontSize: 17),
@@ -114,7 +122,8 @@ class _AskComponentsState extends State<AskComponents> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '${widget.AskList["ToDate"].substring(8,10)}-'"${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.AskList["ToDate"].substring(0,10)).toString()))}-${widget.AskList["ToDate"].substring(0,4)}",
+                              '${widget.AskList["ToDate"].substring(8, 10)}-'
+                              "${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.AskList["ToDate"].substring(0, 10)).toString()))}-${widget.AskList["ToDate"].substring(0, 4)}",
                               style: TextStyle(
                                   color: cnst.appPrimaryMaterialColor,
                                   fontSize: 17),
@@ -125,40 +134,49 @@ class _AskComponentsState extends State<AskComponents> {
                     ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 5),
-                    child: Container(
-                      /*width: MediaQuery
-                        .of(context)
-                        .size
-                        .width - 20,*/
-                      padding: EdgeInsets.all(0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Colors.green[100]),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 7, right: 7),
-                            child: Text(
-                              'Message on Whatsapp',
-                              style: TextStyle(
-                                  color: cnst.appPrimaryMaterialColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13),
+                GestureDetector(
+                  onTap: () {
+                    String whatsAppLink = cnst.whatsAppLink;
+                    String urlwithmobile = whatsAppLink.replaceAll(
+                        "#mobile", "91${widget.AskList["MobileNo"]}");
+                    String urlwithmsg = urlwithmobile.replaceAll("#msg", "");
+                    SaveShare(urlwithmsg);
+                  },
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child: Container(
+                        /*width: MediaQuery
+                          .of(context)
+                          .size
+                          .width - 20,*/
+                        padding: EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Colors.green[100]),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left: 7, right: 7),
+                              child: Text(
+                                'Message on Whatsapp',
+                                style: TextStyle(
+                                    color: cnst.appPrimaryMaterialColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13),
+                              ),
                             ),
-                          ),
-                          Image.asset(
-                            'images/whatsapp.png',
-                            height: 35,
-                            width: 35,
-                          ),
-                        ],
+                            Image.asset(
+                              'images/whatsapp.png',
+                              height: 35,
+                              width: 35,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
