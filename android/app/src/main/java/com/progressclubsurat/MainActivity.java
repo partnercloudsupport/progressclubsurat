@@ -1,4 +1,4 @@
-package com.progressclubsurat;
+package com.itfuturz.progressclubsurat;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

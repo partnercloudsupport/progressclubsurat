@@ -62,7 +62,9 @@ class _MemberSearchComponentState extends State<MemberSearchComponent> {
                               widget.memberList["Image"] != ""
                           ? FadeInImage.assetNetwork(
                               placeholder: 'images/icon_user.png',
-                              image: widget.memberList["Image"].toString().contains("http")
+                              image: widget.memberList["Image"]
+                                      .toString()
+                                      .contains("http")
                                   ? widget.memberList["Image"].toString()
                                   : "http://pmc.studyfield.com/" +
                                       widget.memberList["Image"],
@@ -91,6 +93,7 @@ class _MemberSearchComponentState extends State<MemberSearchComponent> {
                                 fontSize: 18),
                           ),
                           Text('${widget.memberList["CompanyName"]}'),
+                          Text('${widget.memberList["ChapterName"]}'),
                         ],
                       ),
                     )),

@@ -23,6 +23,7 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+import com.android.build.OutputFile
 
 android {
     compileSdkVersion 28
@@ -33,12 +34,26 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.progressclubsurat"
+        applicationId "com.itfuturz.progressclubsurat"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 4
+        versionName '1.0.4'
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
+        ndk {
+            abiFilters 'arm64-v8a', 'x86_64'
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include "x86", "armeabi-v7a", "arm64-v8a", "x86_64"
+            universalApk true
+        }
     }
 
     buildTypes {
@@ -50,8 +65,40 @@ android {
     }
 }
 
+ext.abiCodes = ['armeabi-v7a':1, x86:2, x86_64:3]
+
+
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+
+        def baseAbiVersionCode = project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+
+        if (baseAbiVersionCode != null) {
+            output.versionCodeOverride =
+                    baseAbiVersionCode * 1000 + variant.versionCode
+        }
+    }
+}
+
+
 flutter {
     source '../..'
+}
+
+afterEvaluate {
+    mergeReleaseJniLibFolders.doLast {
+        def archTypes = ["arm-release", "arm64-release"]
+        archTypes.forEach { item ->
+            copy {
+                from zipTree("$flutterRoot/bin/cache/artifacts/engine/android-$item/flutter.jar")
+                include 'lib/*/libflutter.so'
+                into "$buildDir/intermediates/jniLibs/release/"
+                eachFile {
+                    it.path = it.path.replaceFirst("lib/", "")
+                }
+            }
+        }
+    }
 }
 
 dependencies {

@@ -484,7 +484,7 @@ class _MemberProfileState extends State<MemberProfile> {
                                                                             .contains(
                                                                                 "http")
                                                                         ? memberImg
-                                                                        : "http://pmcapi.studyfield.com/" +
+                                                                        : "http://pmc.studyfield.com/" +
                                                                             memberImg,
                                                                     height: 120,
                                                                     width: 120,

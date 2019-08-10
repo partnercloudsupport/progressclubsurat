@@ -198,7 +198,7 @@ class _GuestDetailsState extends State<GuestDetails> {
                                               .assetNetwork(
                                             placeholder:
                                             'images/icon_user.png',
-                                            image:memberImg.contains("http")?memberImg:"http://pmcapi.studyfield.com/" + memberImg,
+                                            image:memberImg.contains("http")?memberImg:"http://pmc.studyfield.com/" + memberImg,
                                             height: 120,
                                             width: 120,
                                             fit: BoxFit.fill,
