@@ -31,19 +31,27 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    signingConfigs {
+        release_config {
+            keyAlias 'progressclubsurat'
+            keyPassword 'progressclubsurat'
+            storeFile file('Macintosh HD/Users/as/Desktop/DenishWork/Keys/progressclubsurat')
+            storePassword 'progressclubsurat'
+        }
+    }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.itfuturz.progressclubsurat"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 5
+        versionCode 6
         versionName '1.0.1'
         multiDexEnabled true
         //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
         ndk {
-            abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
         /*ndk {
             abiFilters 'arm64-v8a', 'x86_64'
@@ -54,8 +62,8 @@ android {
         abi {
             enable true
             reset()
-            //include "x86", "armeabi-v7a", "arm64-v8a", "x86_64"
-            universalApk false
+            include "x86", "armeabi-v7a", "arm64-v8a", "x86_64"
+            universalApk true
         }
     }
 
@@ -63,12 +71,13 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
+            //signingConfig signingConfigs.debug
             signingConfig signingConfigs.debug
         }
     }
 }
 
-ext.abiCodes = ['armeabi-v7a':1,'x86':2, 'x86_64':3,'arm64-v8a':4]
+ext.abiCodes = ['armeabi-v7a': 1, 'x86': 2, 'x86_64': 3, 'arm64-v8a': 4]
 
 
 android.applicationVariants.all { variant ->
@@ -88,21 +97,21 @@ flutter {
     source '../..'
 }
 
-afterEvaluate {
-    mergeReleaseJniLibFolders.doLast {
-        def archTypes = ["arm-release", "arm64-release"]
-        archTypes.forEach { item ->
-            copy {
-                from zipTree("$flutterRoot/bin/cache/artifacts/engine/android-$item/flutter.jar")
-                include 'lib/*/libflutter.so'
-                into "$buildDir/intermediates/jniLibs/release/"
-                eachFile {
-                    it.path = it.path.replaceFirst("lib/", "")
-                }
-            }
-        }
-    }
-}
+//afterEvaluate {
+//    mergeReleaseJniLibFolders.doLast {
+//        def archTypes = ["arm-release", "arm64-release"]
+//        archTypes.forEach { item ->
+//            copy {
+//                from zipTree("$flutterRoot/bin/cache/artifacts/engine/android-$item/flutter.jar")
+//                include 'lib/*/libflutter.so'
+//                into "$buildDir/intermediates/jniLibs/release/"
+//                eachFile {
+//                    it.path = it.path.replaceFirst("lib/", "")
+//                }
+//            }
+//        }
+//    }
+//}
 
 dependencies {
     testImplementation 'junit:junit:4.12'
