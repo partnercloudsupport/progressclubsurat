@@ -53,6 +53,8 @@ class _MemberProfileState extends State<MemberProfile> {
   int memberId = 0;
   String memberImg = "";
 
+  String selectGender = "select Gender";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -159,8 +161,19 @@ class _MemberProfileState extends State<MemberProfile> {
           list[0]["DateOfBirth"] == "" || list[0]["DateOfBirth"] == null
               ? ""
               : list[0]["DateOfBirth"].toString().substring(0, 10);
-      edtGender.text = list[0]["Gender"];
-      edtAge.text = list[0]["Age"].toString();
+      edtGender.text = list[0]["Gender"].toString();
+
+      if (list[0]["Gender"].toString().toLowerCase() == "male" ||
+          list[0]["Gender"].toString().toLowerCase() == "female") {
+        selectGender = list[0]["Gender"];
+      } else
+        edtGender.text = "";
+
+      if (list[0]["Age"] != null) {
+        edtAge.text = list[0]["Age"].toString();
+      } else
+        edtAge.text = "";
+
       edtAnniversary.text =
           list[0]["Anniversery"] == "" || list[0]["Anniversery"] == null
               ? ""
@@ -187,7 +200,8 @@ class _MemberProfileState extends State<MemberProfile> {
   sendPersonalInfo() async {
     if (edtName.text != "" &&
         edtDOB.text != "" &&
-        edtGender.text != "" &&
+        selectGender != "select Gender" &&
+        //select Gender.text != "" &&
         edtAge.text != "" &&
         edtAnniversary.text != "" &&
         edtAddress.text != "") {
@@ -208,7 +222,7 @@ class _MemberProfileState extends State<MemberProfile> {
             'Name': edtName.text,
             'DateOfBirth': edtDOB.text,
             'Age': edtAge.text,
-            'Gender': edtGender.text,
+            'Gender': selectGender,
             'Anniversery': edtAnniversary.text,
             'ResidenceAddress': edtAddress.text,
           };
@@ -223,6 +237,7 @@ class _MemberProfileState extends State<MemberProfile> {
               await prefs.setString(Session.CompanyName, edtCmpName.text);
               setState(() {
                 isEditable = !isEditable;
+                edtGender.text = selectGender;
               });
               showHHMsg("Data Updated Successfully");
             } else {
@@ -246,7 +261,7 @@ class _MemberProfileState extends State<MemberProfile> {
         showMsg("No Internet Connection.");
       }
     } else {
-      showMsg("Empty Field Not Allowed");
+      showMsg("Please Fill or Select All the Fields");
     }
   }
 
@@ -315,66 +330,58 @@ class _MemberProfileState extends State<MemberProfile> {
 
   //send Business Info to server
   sendMoreInfoInfo() async {
-    if (edtTestimonial.text != "" &&
-        edtAchievement.text != "" &&
-        edtExperienceOfWork.text != "" &&
-        edtAskForPeople.text != "" &&
-        edtIntroducer.text != "") {
-      try {
-        //check Internet Connection
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          setState(() {
-            isMoreInfoLoading = true;
-          });
-          SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      //check Internet Connection
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isMoreInfoLoading = true;
+        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
 
-          String memberId = prefs.getString(Session.MemberId);
-          var now = new DateTime.now();
+        String memberId = prefs.getString(Session.MemberId);
+        var now = new DateTime.now();
 
-          var data = {
-            'Id': memberId,
-            'Testimonial': edtTestimonial.text,
-            'Achivement': edtAchievement.text,
-            'ExpOfWork': edtExperienceOfWork.text.toString(),
-            'AskForPeople': edtAskForPeople.text,
-            'Introducer': edtIntroducer.text,
-          };
+        var data = {
+          'Id': memberId,
+          'Testimonial': edtTestimonial.text,
+          'Achivement': edtAchievement.text,
+          'ExpOfWork': edtExperienceOfWork.text.toString(),
+          'AskForPeople': edtAskForPeople.text,
+          'Introducer': edtIntroducer.text,
+        };
 
-          Services.sendMoreInfoMemberDetails(data).then((data) async {
-            setState(() {
-              isMoreInfoLoading = false;
-            });
-            if (data.Data != "0" && data != "") {
-              //signUpDone("Assignment Task Update Successfully.");
-              await prefs.setString(Session.Name, edtName.text);
-              await prefs.setString(Session.CompanyName, edtCmpName.text);
-              showHHMsg("Data Updated Successfully");
-              setState(() {
-                isMoreEditable = !isMoreEditable;
-              });
-            } else {
-              setState(() {
-                isMoreInfoLoading = false;
-              });
-            }
-          }, onError: (e) {
-            setState(() {
-              isMoreInfoLoading = false;
-            });
-            showMsg("Try Again.");
-          });
-        } else {
+        Services.sendMoreInfoMemberDetails(data).then((data) async {
           setState(() {
             isMoreInfoLoading = false;
           });
-          showMsg("No Internet Connection.");
-        }
-      } on SocketException catch (_) {
+          if (data.Data != "0" && data != "") {
+            //signUpDone("Assignment Task Update Successfully.");
+            await prefs.setString(Session.Name, edtName.text);
+            await prefs.setString(Session.CompanyName, edtCmpName.text);
+            showHHMsg("Data Updated Successfully");
+            setState(() {
+              isMoreEditable = !isMoreEditable;
+            });
+          } else {
+            setState(() {
+              isMoreInfoLoading = false;
+            });
+          }
+        }, onError: (e) {
+          setState(() {
+            isMoreInfoLoading = false;
+          });
+          showMsg("Try Again.");
+        });
+      } else {
+        setState(() {
+          isMoreInfoLoading = false;
+        });
         showMsg("No Internet Connection.");
       }
-    } else {
-      showMsg("Empty Field Not Allowed");
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
     }
   }
 
@@ -457,8 +464,8 @@ class _MemberProfileState extends State<MemberProfile> {
                                                       milliseconds: 2000),
                                                   repeat: true,
                                                   showTwoGlows: true,
-                                                  repeatPauseDuration:
-                                                      Duration(milliseconds: 100),
+                                                  repeatPauseDuration: Duration(
+                                                      milliseconds: 100),
                                                   child: Material(
                                                     elevation: 8.0,
                                                     shape: CircleBorder(),
@@ -466,23 +473,25 @@ class _MemberProfileState extends State<MemberProfile> {
                                                       backgroundColor:
                                                           Colors.grey[100],
                                                       child: ClipOval(
-                                                        child: memberImg == "" &&
+                                                        child: memberImg ==
+                                                                    "" &&
                                                                 memberImg ==
                                                                     "null"
                                                             ? Image.asset(
                                                                 'images/icon_user.png',
                                                                 height: 120,
                                                                 width: 120,
-                                                                fit: BoxFit.fill,
+                                                                fit:
+                                                                    BoxFit.fill,
                                                               )
-                                                            : _imageOffer == null
+                                                            : _imageOffer ==
+                                                                    null
                                                                 ? FadeInImage
                                                                     .assetNetwork(
                                                                     placeholder:
                                                                         'images/icon_user.png',
-                                                                    image: memberImg
-                                                                            .contains(
-                                                                                "http")
+                                                                    image: memberImg.contains(
+                                                                            "http")
                                                                         ? memberImg
                                                                         : "http://pmc.studyfield.com/" +
                                                                             memberImg,
@@ -750,43 +759,70 @@ class _MemberProfileState extends State<MemberProfile> {
                                                                       .width /
                                                                   2) -
                                                               30,
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              TextFormField(
-                                                                controller:
-                                                                    edtGender,
-                                                                scrollPadding:
-                                                                    EdgeInsets
-                                                                        .all(0),
-                                                                decoration: InputDecoration(
-                                                                    labelText:
-                                                                        "Gender:",
-                                                                    labelStyle: TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w600),
-                                                                    hintText:
-                                                                        "Gender"),
-                                                                enabled:
-                                                                    isEditable,
-                                                                keyboardType:
-                                                                    TextInputType
-                                                                        .multiline,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        15),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                          child: !isEditable
+                                                              ? TextFormField(
+                                                                  controller:
+                                                                      edtGender,
+                                                                  scrollPadding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              0),
+                                                                  decoration: InputDecoration(
+                                                                      labelText:
+                                                                          "Gender:",
+                                                                      labelStyle: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight: FontWeight
+                                                                              .w600),
+                                                                      hintText:
+                                                                          "Gender"),
+                                                                  enabled:
+                                                                      isEditable,
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .multiline,
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          15),
+                                                                )
+                                                              : DropdownButton(
+                                                                  hint: Text(
+                                                                      'Select Gender'),
+                                                                  // Not necessary for Option 1
+                                                                  value:
+                                                                      selectGender,
+                                                                  onChanged:
+                                                                      (newValue) {
+                                                                    setState(
+                                                                        () {
+                                                                      selectGender =
+                                                                          newValue;
+                                                                    });
+                                                                  },
+                                                                  items: <
+                                                                      String>[
+                                                                    'select Gender',
+                                                                    'Male',
+                                                                    'Female'
+                                                                  ].map<
+                                                                      DropdownMenuItem<
+                                                                          String>>(
+                                                                      (String
+                                                                          value) {
+                                                                    return DropdownMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                          value,
+                                                                      child: Text(
+                                                                          value),
+                                                                    );
+                                                                  }).toList(),
+                                                                ),
                                                         ),
                                                         Container(
                                                           padding:
@@ -941,7 +977,8 @@ class _MemberProfileState extends State<MemberProfile> {
                                                       scrollPadding:
                                                           EdgeInsets.all(0),
                                                       decoration: InputDecoration(
-                                                          labelText: "Address",
+                                                          labelText:
+                                                              "Home Address",
                                                           labelStyle: TextStyle(
                                                               color:
                                                                   Colors.black,
@@ -949,7 +986,8 @@ class _MemberProfileState extends State<MemberProfile> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w600),
-                                                          hintText: "Address"),
+                                                          hintText:
+                                                              "Home Address"),
                                                       enabled: isEditable,
                                                       minLines: 1,
                                                       maxLines: 4,
@@ -1505,7 +1543,6 @@ class _MemberProfileState extends State<MemberProfile> {
     );
   }
 
-
   sendUserProfileImg() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -1526,13 +1563,13 @@ class _MemberProfileState extends State<MemberProfile> {
             filename = file[file.length - 1].toString();
 
           ImageProperties properties =
-          await FlutterNativeImage.getImageProperties(_imageOffer.path);
+              await FlutterNativeImage.getImageProperties(_imageOffer.path);
           compressedFile = await FlutterNativeImage.compressImage(
               _imageOffer.path,
               quality: 80,
               targetWidth: 600,
               targetHeight:
-              (properties.height * 600 / properties.width).round());
+                  (properties.height * 600 / properties.width).round());
         }
 
         FormData formData = new FormData.from(
