@@ -56,6 +56,7 @@ class _MyAppState extends State<MyApp> {
         onMessage: (Map<String, dynamic> message) {
           print("onMessage");
           print(message);
+
           //print(message["notification"]["title"]);
           //_showItemDialog(message, context);
         },
