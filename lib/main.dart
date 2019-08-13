@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
     _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) {
           print("onMessage");
+
           print(message);
 
           //print(message["notification"]["title"]);
